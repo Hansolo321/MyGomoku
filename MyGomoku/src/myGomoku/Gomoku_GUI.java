@@ -66,7 +66,7 @@ public class Gomoku_GUI {
 	private Timer TM=null;
 	private boolean AT1animation=false;
 	private boolean Animation=true;
-
+	private ArrayList<BoardState> evaluresult= new ArrayList<BoardState>();
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -82,7 +82,6 @@ public class Gomoku_GUI {
 	}
 
 	public Gomoku_GUI() {
-
 		initialize();
 	}
 
@@ -283,7 +282,9 @@ public class Gomoku_GUI {
 				while(!gameend&&flag==true) {
 
 					if(evaluator) {
-						evaluatorrange=backend.scale(movinglist);}
+						evaluatorrange=backend.scale(movinglist);
+						evaluresult=backend.evaluator(board);
+					}
 					else {
 						backend.scaled=new int[] {0,0,14,14};
 					}
@@ -611,7 +612,9 @@ public class Gomoku_GUI {
 					k++;}
 				if(!gameend) {
 					if(evaluator) {
-						evaluatorrange=backend.scale(movinglist);}
+						evaluatorrange=backend.scale(movinglist);
+						evaluresult= backend.evaluator(board);
+					}
 					else {
 						backend.scaled=new int[] {0,0,14,14};
 					}
@@ -1081,7 +1084,6 @@ public class Gomoku_GUI {
 		try {
 			highlighter.addHighlight(p0, p1, painter);
 		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(pvp) {Analysis.append("Mode: PvP!\n");}

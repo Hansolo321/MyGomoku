@@ -188,4 +188,9 @@ public class Back_End {
 		scaled[0]=minX;scaled[1]=minY;scaled[2]=maxX;scaled[3]=maxY;
 		return scaled;
 	}
+
+	public ArrayList<BoardState> evaluator(char[][] board) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
