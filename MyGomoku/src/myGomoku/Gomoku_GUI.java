@@ -1,6 +1,7 @@
 package myGomoku;
 /*
  * Author: Han Liao(lhan@iastate.edu)
+ * This is the project for my own creative component in ISU
  */
 import java.awt.Color;
 import java.awt.EventQueue;
