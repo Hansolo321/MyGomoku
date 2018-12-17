@@ -1,4 +1,7 @@
 package myGomoku;
+/*
+ * Author: Han Liao(lhan@iastate.edu)
+ */
 
 public class Moves {
 	private int index;

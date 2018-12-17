@@ -1,4 +1,7 @@
 package myGomoku;
+/*
+ * Author: Han Liao(lhan@iastate.edu)
+ */
 
 import java.util.ArrayList;
 import java.util.Random;
