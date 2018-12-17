@@ -1,9 +1,8 @@
 package myGomoku;
 /*
-  * Author: Han Liao(lhan@iastate.edu)
- * This is the project for my own creative component in ISU
+ * Author: Han Liao(lhan@iastate.edu or leslieileo@gmail.com)
+ * This is the project for creative component in ISU
  */
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -12,7 +11,6 @@ public class Back_End {
 	private int inarow=5;
 	public int[] scaled =new int[4];
 	private int scalednum=1;
-
 
 	public int[] stoneposition(int mouseX, int mouseY) {
 		double close=100;
