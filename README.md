@@ -1,6 +1,6 @@
 # MyGomoku
 
-This is a research project for create component in ISU.
+My name is Han Liao. This is a personal research project for create component in ISU.
 
 ## Getting Started
 
