@@ -52,8 +52,8 @@ public class Back_End {
 					if(board[i][j]!='-') {
 						result[0]=i+1;
 						result[1]=j+2;
-					return result;
-								
+						return result;
+
 					}
 				}
 			}
@@ -161,7 +161,7 @@ public class Back_End {
 	}
 
 	public int[] scale(ArrayList<Moves> movinglist) {
-		 scaled =new int[4];
+		scaled =new int[4];
 		int minX=15,minY=15,maxX=0,maxY=0;
 		if(movinglist.size()==0) {
 			return null;
@@ -191,4 +191,6 @@ public class Back_End {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 }
