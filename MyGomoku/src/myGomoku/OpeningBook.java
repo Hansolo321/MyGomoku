@@ -11,12 +11,10 @@ public class OpeningBook {
 	public ArrayList<Moves> Opeing(ArrayList<Moves> movinglist, int k) {
 		ary.clear();
 		if(k==1) {
-
-
 			ary.add(new Moves(7,7));
 			return ary;
 		}
-		else if(k==2) {
+	 if(k==2) {
 			double dis1=Math.sqrt(1);
 			double dis2=Math.sqrt(2);
 			for(int i=0;i<15;i++) {
@@ -29,7 +27,7 @@ public class OpeningBook {
 			}
 			return ary;
 		}
-		else if(k==3) {
+		 if(k==3) {
 			double distance=Math.sqrt(Math.pow(Math.abs(movinglist.get(0).getX()-movinglist.get(1).getX()),2)+Math.pow(Math.abs(movinglist.get(0).getY()-movinglist.get(1).getY()),2));
 			double dis1=Math.sqrt(1);
 			double dis2=Math.sqrt(2);
@@ -112,7 +110,7 @@ public class OpeningBook {
 			}
 			return ary;
 		}
-		else if(k==4) {
+		 if(k==4) {
 			double distance=Math.sqrt(Math.pow(Math.abs(movinglist.get(0).getX()-movinglist.get(1).getX()),2)+Math.pow(Math.abs(movinglist.get(0).getY()-movinglist.get(1).getY()),2));
 			double distance1=Math.sqrt(Math.pow(Math.abs(movinglist.get(1).getX()-movinglist.get(2).getX()),2)+Math.pow(Math.abs(movinglist.get(1).getY()-movinglist.get(2).getY()),2));
 			double distance2=Math.sqrt(Math.pow(Math.abs(movinglist.get(0).getX()-movinglist.get(2).getX()),2)+Math.pow(Math.abs(movinglist.get(0).getY()-movinglist.get(2).getY()),2));

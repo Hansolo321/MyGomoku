@@ -2,6 +2,7 @@ package myGomoku;
 /*
  * Author: Han Liao(lhan@iastate.edu or leslieileo@gmail.com)
  * This is the project for creative component in ISU
+ * This is version 12.24.2018
  */
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -186,7 +187,7 @@ public class Gomoku_GUI {
 					OpeningAry.clear();
 					isOpening=false;
 				}
-
+				
 				for(int i=0;i<movinglist.size();i++) {
 					int x=movinglist.get(i).getX()*39+1-15+20;
 					int y=movinglist.get(i).getY()*39+1-15+20;
@@ -303,7 +304,7 @@ public class Gomoku_GUI {
 				if(!gameend&&k<5) {
 					while(flag==true&&k<5) {
 						if(k<5&&OpeningFlag==true) {
-							OpeningBook ob= new OpeningBook();	
+							OpeningBook ob= new OpeningBook();
 							OpeningAry=ob.Opeing(movinglist,k);
 							Random rand=new Random();
 							int	 key=rand.nextInt(OpeningAry.size());
@@ -337,12 +338,12 @@ public class Gomoku_GUI {
 							labelindex(movinglist);	
 							k++;
 						}
-						
+
 						if(AT1animation) {flag=false;}
 						else {flag=true;isOpening=false;}
 					}
 				}
-				
+
 				if(!gameend&&k>=5) {
 					flag=true;
 					while(!gameend&&flag==true) {
@@ -604,7 +605,6 @@ public class Gomoku_GUI {
 						int x=movinglist.get(movinglist.size()-1).getX();
 						int z=movinglist.get(movinglist.size()-2).getX();
 						int e=movinglist.get(movinglist.size()-2).getY();
-
 						board[x][y]='-';
 						board[z][e]='-';
 						movinglist.remove(movinglist.size()-1);
@@ -670,14 +670,10 @@ public class Gomoku_GUI {
 				TM1.stop();
 				AT1animation=false;
 				AIboolean=false;
-				if(!pvp) {
-
-
-					if(k<5) {
+				if(!pvp) {if(k<5) {
 						OpeningBook ob = new OpeningBook();
 						isOpening=true;
 						OpeningAry=ob.Opeing(movinglist,k);
-
 					}
 					else {
 						isOpening=false;
@@ -697,18 +693,20 @@ public class Gomoku_GUI {
 		JButton btnNewGame = new JButton("New Game");
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				TM1.stop();
-
-				TM.stop();
 				AT1animation=false;
 				Analysis.setForeground(Color.BLACK);
 				Analysis.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
 				k=1;
 				gameend=false;
+				movinglist.clear();
+				TM1.stop();
+				TM.stop();
+				AIboolean=false;
+				OpeningFlag=true;
+				AT1animation=false;
 				five.clear();
 				BoardPanel.removeAll();
-				movinglist.removeAll(movinglist);
+				OpeningAry.clear();
 				num1.removeAll();
 				num.removeAll();
 				for(int i=0;i<15;i++) {
@@ -729,6 +727,7 @@ public class Gomoku_GUI {
 				if(Animation) {
 					Analysis1.append("Animation is : ON");}
 				else {Analysis1.append("Animation is : OFF");}
+				
 			}
 		});
 		btnNewGame.setBackground(new Color(0,255,0));
@@ -785,9 +784,6 @@ public class Gomoku_GUI {
 					if(five.size()!=5) {
 						for(int n=0;n<10;n++) {
 							starttime = System.nanoTime();
-
-
-
 							AI1=backend.AI1(board,k);
 
 							endtime = System.nanoTime();
@@ -963,7 +959,10 @@ public class Gomoku_GUI {
 				AIboolean=false;
 				if(pvp) {
 					pvp=false;
-
+					if(movinglist.isEmpty()) {
+						movinglist.add(new Moves(7,7,k,"BLACK"));
+						board[7][7]='B';
+					}
 					if(k<5) {
 						OpeningBook ob = new OpeningBook();
 						isOpening=true;
@@ -979,7 +978,7 @@ public class Gomoku_GUI {
 					Analysis1.setText("Board evaluator information will be shown there: \n\nEvaluator is on by default.\nAnimation is on by default.\n\nYou can turn it off by pressing 'Evaluator' button\n\n");
 					BoardPanel.revalidate();
 					BoardPanel.repaint();	
-
+					labelindex(movinglist);	
 					Analysis.setText("You swtiched to PvAI mode.");
 					modelabel.remove(modelabel);
 					frame.getContentPane().remove(modelabel);
@@ -991,17 +990,18 @@ public class Gomoku_GUI {
 					frame.getContentPane().add(modelabel);	
 				}
 				else {
-
 					if(k<5) {
+						if(movinglist.isEmpty()) {
+							movinglist.add(new Moves(7,7,k,"BLACK"));
+							board[7][7]='B';
+						}
 						OpeningBook ob = new OpeningBook();
 						isOpening=true;
 						OpeningAry=ob.Opeing(movinglist,k);
-
 					}
 					else {
 						isOpening=false;
 					}
-
 
 					Analysis1.setText("Board evaluator information will be shown there: \n\nEvaluator is on by default.\nAnimation is on by default.\n\nYou can turn it off by pressing 'Evaluator' button\n\n");
 					TM.stop();
@@ -1009,6 +1009,7 @@ public class Gomoku_GUI {
 					AT1animation=false;
 					BoardPanel.revalidate();
 					BoardPanel.repaint();
+					labelindex(movinglist);
 					Analysis.setText("Already in PvAI mode.");
 				}
 			}
