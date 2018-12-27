@@ -11,8 +11,6 @@ public class OpeningBook {
 	public ArrayList<Moves> Opeing(ArrayList<Moves> movinglist, int k) {
 		ary.clear();
 		if(k==1) {
-
-
 			ary.add(new Moves(7,7));
 			return ary;
 		}

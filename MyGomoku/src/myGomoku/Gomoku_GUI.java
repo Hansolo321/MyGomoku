@@ -72,6 +72,7 @@ public class Gomoku_GUI {
 	private boolean isOpening=false;
 	private boolean OpeningFlag=true;
 	private boolean AIboolean=false;
+	private int Delay;
 	private ArrayList<BoardState> evaluresult= new ArrayList<BoardState>();
 
 	public static void main(String[] args) {
@@ -337,12 +338,12 @@ public class Gomoku_GUI {
 							labelindex(movinglist);	
 							k++;
 						}
-						
+
 						if(AT1animation) {flag=false;}
 						else {flag=true;isOpening=false;}
 					}
 				}
-				
+
 				if(!gameend&&k>=5) {
 					flag=true;
 					while(!gameend&&flag==true) {
@@ -699,9 +700,9 @@ public class Gomoku_GUI {
 			public void actionPerformed(ActionEvent arg0) {
 
 				TM1.stop();
-
 				TM.stop();
 				AT1animation=false;
+				AIboolean=false;
 				Analysis.setForeground(Color.BLACK);
 				Analysis.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
 				k=1;
