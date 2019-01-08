@@ -412,7 +412,6 @@ public class OpeningBook {
 					for(int j=0;j<15;j++) {
 						double dist1=Math.sqrt(Math.pow(Math.abs(movinglist.get(0).getX()-i),2)+Math.pow(Math.abs(movinglist.get(0).getY()-j),2));
 						double dist2=Math.sqrt(Math.pow(Math.abs(movinglist.get(1).getX()-i),2)+Math.pow(Math.abs(movinglist.get(1).getY()-j),2));
-						double dist3=Math.sqrt(Math.pow(Math.abs(movinglist.get(2).getX()-i),2)+Math.pow(Math.abs(movinglist.get(2).getY()-j),2));
 						if((dist1==dis1||dist1==dis2)&&dist2!=0) {
 							ary.add(new Moves(i,j));
 						}

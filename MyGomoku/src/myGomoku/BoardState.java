@@ -13,17 +13,18 @@ public class BoardState {
 	private HashMap<ArrayList<Moves>,Integer> oneIndiv;
 	private HashMap<ArrayList<Moves>,Integer> twoInrow;
 	private HashMap<ArrayList<Moves>,Integer> threeInrow;
-	private HashMap<ArrayList<Moves>,Integer> threeInrowD;
+
 	private HashMap<ArrayList<Moves>,Integer> fourInrow;
-	private int boardEval;  
+	private HashMap<ArrayList<Moves>,Integer> fiveInrow;
+	private int boardEval=0;  
 	
-	public void BoradState(HashMap<ArrayList<Moves>,Integer> oneIndiv, HashMap<ArrayList<Moves>,Integer> twoInrow, HashMap<ArrayList<Moves>,Integer> threeInrow, HashMap<ArrayList<Moves>,Integer> threeInrowD, HashMap<ArrayList<Moves>,Integer> fourInrow, int boardEval) {
+	public void BoradState(HashMap<ArrayList<Moves>,Integer> oneIndiv, HashMap<ArrayList<Moves>,Integer> twoInrow, HashMap<ArrayList<Moves>,Integer> threeInrow, HashMap<ArrayList<Moves>,Integer> fourInrow, HashMap<ArrayList<Moves>,Integer> fiveInrow, int boardEval) {
 		this.oneIndiv=oneIndiv;
 		this.twoInrow=twoInrow;
-		this.threeInrow=threeInrow;
-		this.threeInrowD=threeInrowD;
+		this.threeInrow=threeInrow;	
 		this.fourInrow=fourInrow;
 		this.boardEval=boardEval;
+		this.fiveInrow=fiveInrow;
 	}
 	
 	public HashMap<ArrayList<Moves>,Integer> oneIndiv() {
@@ -35,7 +36,11 @@ public class BoardState {
 	}
 	
 	public HashMap<ArrayList<Moves>,Integer> threeInrow() {
-		return threeInrowD;
+		return threeInrow;
+	}
+	
+	public HashMap<ArrayList<Moves>,Integer> threeInrowD() {
+		return fiveInrow;
 	}
 	
 	public HashMap<ArrayList<Moves>,Integer> fourInrow() {
@@ -44,5 +49,9 @@ public class BoardState {
 	
 	public int getBoardEval() {
 		return boardEval;
+	}
+	
+	public String ToString() {
+		return String.valueOf(boardEval);
 	}
 }

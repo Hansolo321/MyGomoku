@@ -4,13 +4,14 @@ package myGomoku;
  * This is the project for creative component in ISU
  */
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Back_End {
 	public ArrayList<Moves> five=new ArrayList<Moves>();
 	private int inarow=5;
 	public int[] scaled =new int[4];
-	private int scalednum=1;
+	private int scalednum=4;
 
 	public int[] stoneposition(int mouseX, int mouseY) {
 		double close=100;
@@ -187,10 +188,15 @@ public class Back_End {
 		return scaled;
 	}
 
-	public ArrayList<BoardState> evaluator(char[][] board) {
-		// TODO Auto-generated method stub
-		return null;
+	public BoardState evaluator(char[][] board, ArrayList<Moves> movinglist, int[] evaluatorrange) {
+		BoardState bs= new BoardState();
+		HashMap<ArrayList<Moves>,Integer> oneIndiv;
+		HashMap<ArrayList<Moves>,Integer> twoInrow;
+		HashMap<ArrayList<Moves>,Integer> threeInrow;
+		HashMap<ArrayList<Moves>,Integer> fourInrow;
+		HashMap<ArrayList<Moves>,Integer> fiveInrow;
+		
+		
+		return bs;
 	}
-
-
 }

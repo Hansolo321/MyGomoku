@@ -73,7 +73,7 @@ public class Gomoku_GUI {
 	private boolean OpeningFlag=true;
 	private boolean AIboolean=false;
 	private int Delay;
-	private ArrayList<BoardState> evaluresult= new ArrayList<BoardState>();
+	private BoardState evaluresult= new BoardState();
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -350,7 +350,7 @@ public class Gomoku_GUI {
 
 						if(evaluator) {
 							evaluatorrange=backend.scale(movinglist);
-							evaluresult=backend.evaluator(board);
+
 						}
 						else {
 							backend.scaled=new int[] {0,0,14,14};
@@ -448,6 +448,7 @@ public class Gomoku_GUI {
 							movinglist.add (new Moves( (x-21)/39, (y-21)/39, k, "WHITE")) ;	
 							k++;
 						}
+						
 						endCheck();
 						if(!pvp&&!gameend) {
 							if(k<5&&OpeningFlag==true) {
@@ -478,13 +479,13 @@ public class Gomoku_GUI {
 									isOpening=false;
 								}
 								Analysis1.setText("Board evaluator information will be shown there: \n\nEvaluator is on by default.\nAnimation is on by default.\n\nYou can turn it off by pressing 'Evaluator' button\n\n");
+
 								BoardPanel.revalidate();
 								BoardPanel.repaint();	
 								labelindex(movinglist);	
 
 							}
 							else if(!gameend&&k>=5) {
-
 								for(int n=0;n<10;n++) {
 									starttime = System.nanoTime();
 									AI1=backend.AI1(board,k);
@@ -516,6 +517,8 @@ public class Gomoku_GUI {
 							Analysis1.setText("Evaluator is OFF!!\n\nClick 'Evaluator' button to turn it on!!\n\n");
 							if(k<5) {Analysis1.append("Opening book is processing!!");}
 						}
+						evaluresult= backend.evaluator(board, movinglist, evaluatorrange);
+						Analysis1.append(evaluresult.ToString());
 						five.clear();
 						endCheck();
 						BoardPanel.revalidate();
@@ -778,7 +781,7 @@ public class Gomoku_GUI {
 				else if(!gameend&&k>=5) {
 					if(evaluator) {
 						evaluatorrange=backend.scale(movinglist);
-						evaluresult= backend.evaluator(board);
+
 					}
 					else {
 						backend.scaled=new int[] {0,0,14,14};
