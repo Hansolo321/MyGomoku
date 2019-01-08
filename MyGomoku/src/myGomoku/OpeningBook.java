@@ -1,6 +1,6 @@
 package myGomoku;
 /*
- * Author: Han Liao(lhan@iastate.edu or leslieileo@gmail.com)
+ * Author: Han Liao (lhan@iastate.edu or leslieileo@gmail.com)
  * This is the project for creative component in ISU
  * This class is Opening book for the first 4 moves
  */

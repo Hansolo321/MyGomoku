@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /*
- * Author: Han Liao(lhan@iastate.edu or leslieileo@gmail.com)
+ * Author: Han Liao (lhan@iastate.edu or leslieileo@gmail.com)
  * This is the project for creative component in ISU
  */
 
@@ -13,7 +13,6 @@ public class BoardState {
 	private HashMap<ArrayList<Moves>,Integer> oneIndiv;
 	private HashMap<ArrayList<Moves>,Integer> twoInrow;
 	private HashMap<ArrayList<Moves>,Integer> threeInrow;
-
 	private HashMap<ArrayList<Moves>,Integer> fourInrow;
 	private HashMap<ArrayList<Moves>,Integer> fiveInrow;
 	private int boardEval=0;  
