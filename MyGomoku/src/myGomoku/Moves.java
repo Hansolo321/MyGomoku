@@ -38,4 +38,8 @@ public class Moves {
 	public String ToString() {
 		return "Move "+String.format("%02d",index)+": "+"["+String.format("%02d",Xposition)+","+String.format("%02d",Yposition)+"] "+Stone +"\n";
 	}
+	
+	public String toString() {
+		return "["+String.format("%02d",Xposition)+","+String.format("%02d",Yposition)+"] ";
+	}
 }

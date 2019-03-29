@@ -73,7 +73,8 @@ public class Gomoku_GUI {
 	private boolean OpeningFlag=true;
 	private boolean AIboolean=false;
 	private int Delay;
-	private BoardState evaluresult= new BoardState();
+	private BoardState evaluresultB;
+	private BoardState evaluresultW;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -358,7 +359,7 @@ public class Gomoku_GUI {
 						if(five.size()!=5) {
 							for(int n=0;n<10;n++) {
 								starttime = System.nanoTime();
-								AI1=backend.AI1(board,k);
+								AI1=backend.AI1(board,k,movinglist);
 								endtime = System.nanoTime();
 								avgtime+=(endtime-starttime);
 							}
@@ -448,7 +449,7 @@ public class Gomoku_GUI {
 							movinglist.add (new Moves( (x-21)/39, (y-21)/39, k, "WHITE")) ;	
 							k++;
 						}
-						
+					
 						endCheck();
 						if(!pvp&&!gameend) {
 							if(k<5&&OpeningFlag==true) {
@@ -488,7 +489,7 @@ public class Gomoku_GUI {
 							else if(!gameend&&k>=5) {
 								for(int n=0;n<10;n++) {
 									starttime = System.nanoTime();
-									AI1=backend.AI1(board,k);
+									AI1=backend.AI1(board,k,movinglist);
 									endtime = System.nanoTime();
 									avgtime+=(endtime-starttime);
 								}
@@ -517,8 +518,7 @@ public class Gomoku_GUI {
 							Analysis1.setText("Evaluator is OFF!!\n\nClick 'Evaluator' button to turn it on!!\n\n");
 							if(k<5) {Analysis1.append("Opening book is processing!!");}
 						}
-						evaluresult= backend.evaluator(board, movinglist, evaluatorrange);
-						Analysis1.append(evaluresult.ToString());
+			
 						five.clear();
 						endCheck();
 						BoardPanel.revalidate();
@@ -544,6 +544,13 @@ public class Gomoku_GUI {
 					Analysis.setFont(new Font("Mongolian Baiti", Font.BOLD, 18));
 					Analysis.setText("\n\n\n\n\n\n\n\n    The Moving request is cancled!!!");
 				}
+				evaluresultB= backend.black_evaluator(board, movinglist);
+				Analysis1.append("\nBlack side board state and value:");
+				Analysis1.append(evaluresultB.ToString());
+				
+				evaluresultW= backend.white_evaluator(board, movinglist);
+				Analysis1.append("\nWhite side board state and value:");
+				Analysis1.append(evaluresultW.ToString());
 			}
 		});
 
@@ -792,7 +799,7 @@ public class Gomoku_GUI {
 
 
 
-							AI1=backend.AI1(board,k);
+							AI1=backend.AI1(board,k,movinglist);
 
 							endtime = System.nanoTime();
 							avgtime+=(endtime-starttime);
@@ -1196,6 +1203,7 @@ public class Gomoku_GUI {
 		for(int f=0;f<backend.five.size();f++) {
 			five.add(backend.five.get(f));
 		}
+		
 	}
 
 	public void labelindex(ArrayList<Moves> movinglist) {
