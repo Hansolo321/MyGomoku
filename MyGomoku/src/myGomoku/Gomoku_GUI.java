@@ -544,11 +544,11 @@ public class Gomoku_GUI {
 					Analysis.setFont(new Font("Mongolian Baiti", Font.BOLD, 18));
 					Analysis.setText("\n\n\n\n\n\n\n\n    The Moving request is cancled!!!");
 				}
-				evaluresultB= backend.black_evaluator(board, movinglist);
+				evaluresultB= backend.evaluator(board, movinglist,1);
 				Analysis1.append("\nBlack side board state and value:");
 				Analysis1.append(evaluresultB.ToString());
 				
-				evaluresultW= backend.white_evaluator(board, movinglist);
+				evaluresultW= backend.evaluator(board, movinglist,2);
 				Analysis1.append("\nWhite side board state and value:");
 				Analysis1.append(evaluresultW.ToString());
 			}

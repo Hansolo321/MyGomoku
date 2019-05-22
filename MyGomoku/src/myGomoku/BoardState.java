@@ -67,12 +67,12 @@ public class BoardState {
 	}
 		
 	public int getBoardEval() {
-		if(FiveInrow.size()!=0) {boardEval+=10000000;}
-		if((Livefour.size()==1)||(Deadfour.size()==2)||(Deadfour.size()==1&&Livethree.size()==1)) {boardEval+=1000000;}
-		if(Livethree.size()==2) {boardEval+=5000;}
-		if(Deadthree.size()==1&&Livethree.size()==1) {boardEval+=1000;}
+		if(FiveInrow.size()!=0) {boardEval+=10000;}
+		if((Livefour.size()==1)||(Deadfour.size()==2)||(Deadfour.size()==1&&Livethree.size()==1)) {boardEval+=10000;}
+		if(Livethree.size()==2) {boardEval+=10000;}
+		if(Deadthree.size()==1&&Livethree.size()==1) {boardEval+=5000;}
 		if(Deadfour.size()!=0) {boardEval+=(500*Deadfour.size());}
-		if(Livethree.size()!=0) {boardEval+=(400*Livethree.size());}
+		if(Deadthree.size()!=0) {boardEval+=(400*Deadthree.size());}
 		if(Livetwo.size()!=0) {boardEval+=(50*Livetwo.size());}
 		if(Deadtwo.size()!=0) {boardEval+=(10*Deadtwo.size());}
 		return boardEval;
@@ -80,60 +80,67 @@ public class BoardState {
 	
 	public String ToString() {
 		String result="\nBoard Value: "+getBoardEval()+"";
-		result+="\nFive In Row: ";
+		result+="\nFive In Row: \n";
 		for(int i=0;i<FiveInrow.size();i++) {
 			for(int j=0;j<FiveInrow.get(i).size();j++) {
 				result+=FiveInrow.get(i).get(j).toString();
 			}
-			//result+="\n";
+			if(i<FiveInrow.get(i).size()) {
+				result+="\n";}
 		}
 		
-		result+="\nLive Four: ";
+		result+="\nLive Four: \n";
 		for(int i=0;i<Livefour.size();i++) {
 			for(int j=0;j<Livefour.get(i).size();j++) {
 				result+=Livefour.get(i).get(j).toString();
 			}
-			//result+="\n";
+			if(i<Livefour.get(i).size()) {
+				result+="\n";}
 		}
 		
-		result+="\nDead Four: ";
+		result+="\nDead Four: \n";
 		for(int i=0;i<Deadfour.size();i++) {
 			for(int j=0;j<Deadfour.get(i).size();j++) {
 				result+=Deadfour.get(i).get(j).toString();
 			}
-			//result+="\n";
+			if(i<Deadfour.get(i).size()) {
+				result+="\n";}
 		}
 		
-		result+="\nLive Three: ";
+		result+="\nLive Three: \n";
 		for(int i=0;i<Livethree.size();i++) {
 			for(int j=0;j<Livethree.get(i).size();j++) {
 				result+=Livethree.get(i).get(j).toString();
 			}
-			//result+="\n";
+			if(i<Livethree.get(i).size()) {
+				result+="\n";}
 		}
 		
-		result+="\nDead Three: ";
+		result+="\nDead Three: \n";
 		for(int i=0;i<Deadthree.size();i++) {
 			for(int j=0;j<Deadthree.get(i).size();j++) {
 				result+=Deadthree.get(i).get(j).toString();
 			}
-			//result+="\n";
+			if(i<Deadthree.get(i).size()) {
+				result+="\n";}
 		}
 		
-		result+="\nLive Two: ";
+		result+="\nLive Two: \n";
 		for(int i=0;i<Livetwo.size();i++) {
 			for(int j=0;j<Livetwo.get(i).size();j++) {
 				result+=Livetwo.get(i).get(j).toString();
 			}
-			//result+="\n";
+			if(i<Livetwo.get(i).size()) {
+				result+="\n";}
 		}
 		
-		result+="\nDead Two: ";
+		result+="\nDead Two: \n";
 		for(int i=0;i<Deadtwo.size();i++) {
 			for(int j=0;j<Deadtwo.get(i).size();j++) {
 				result+=Deadtwo.get(i).get(j).toString();
 			}
-			//result+="\n";
+			if(i<Deadtwo.get(i).size()) {
+			result+="\n";}
 		}
 		return result;
 	}
