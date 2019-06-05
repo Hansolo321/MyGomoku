@@ -33,7 +33,7 @@ public class Back_End {
 		return answer;
 	}
 
-	public  int[] AI1(char[][] board, int key, ArrayList<Moves> movinglist) {
+	public  int[] Greedy(char[][] board, int key, ArrayList<Moves> movinglist) {
 		int[] result=new int[] {0,0};
 		if(key<=225&&key%2==0) {
 			int i=scaled[0];
@@ -48,12 +48,20 @@ public class Back_End {
 						candidate = new Moves(i,j);
 						movinglist.add(candidate);
 						board[i][j]='W';
-						Black=AI2(board, key+1, movinglist);
+						Black=MAX(board, key+1, movinglist);
 						blackcand=new Moves(Black[0],Black[1]);
 						board[Black[0]][Black[1]]='B';
 						movinglist.add(blackcand);
 						int evaluresultB= evaluator(board, movinglist,1).getBoardEval();
 						int evaluresultW= evaluator(board, movinglist,2).getBoardEval();
+						//						if(evaluresultB>5000) {
+						//							result[0]=Black[0];
+						//							result[1]=Black[1];
+						//							board[Black[0]][Black[1]]='-';
+						//							board[i][j]='-';
+						//							movinglist.remove(movinglist.size()-1);
+						//							movinglist.remove(movinglist.size()-1);
+						//						}
 						if(evaluresultW-evaluresultB>value) {
 							value=evaluresultW-evaluresultB;
 							result[0]=candidate.getX();
@@ -86,12 +94,20 @@ public class Back_End {
 						candidate = new Moves(i,j);
 						movinglist.add(candidate);
 						board[i][j]='B';
-						White=AI2(board, key+1, movinglist);
+						White=MAX(board, key+1, movinglist);
 						whitecand=new Moves(White[0],White[1]);
 						board[White[0]][White[1]]='W';
 						movinglist.add(whitecand);
 						int evaluresultB= evaluator(board, movinglist,1).getBoardEval();
 						int evaluresultW= evaluator(board, movinglist,2).getBoardEval();
+						//						if(evaluresultW>5000) {
+						//							result[0]=White[0];
+						//							result[1]=White[1];
+						//							board[White[0]][White[1]]='-';
+						//							board[i][j]='-';
+						//							movinglist.remove(movinglist.size()-1);
+						//							movinglist.remove(movinglist.size()-1);
+						//						}
 						if(evaluresultB-evaluresultW>value) {
 							value=evaluresultB-evaluresultW;
 							result[0]=candidate.getX();
@@ -114,7 +130,7 @@ public class Back_End {
 		return result;
 	}
 
-	public  int[] AI2(char[][] board, int key, ArrayList<Moves> movinglist) {
+	public  int[] MAX(char[][] board, int key, ArrayList<Moves> movinglist) {
 		int[] result=new int[] {0,0};
 
 		if(key<=225&&key%2==0) {
@@ -163,6 +179,147 @@ public class Back_End {
 				}
 			}
 		}
+		return result;
+	}
+
+	public  int[] Minimax(char[][] board, int key, ArrayList<Moves> movinglist,int depth,boolean maxplayer) {
+		int[] result=new int[] {0,0};
+		if(key%2==0) {
+			result= MinimaxWhite(board, key,  movinglist,depth,maxplayer);
+		}
+		else {
+			result=MinimaxBlack(board, key,  movinglist,depth,maxplayer);
+				}
+		return result;
+	}
+
+	public  int[] MinimaxWhite(char[][] board, int key, ArrayList<Moves> movinglist,int depth,boolean maxplayer) {
+		int[] result=new int[] {0,0};
+		if(depth==0) {return new int[] {movinglist.get(movinglist.size()-1).getX(),movinglist.get(movinglist.size()-1).getY()};}
+		if(maxplayer) {
+			int maxEval=-1000000;
+			int Y=0,X=0;
+			for(int i=scaled[0];i<=scaled[2];i++) {
+				for(int j=scaled[1];j<=scaled[3];j++) {
+					if(board[i][j]!='B'&&board[i][j]!='W') {
+						board[i][j]='W';
+						key++;
+						movinglist.add(new Moves(i,j));
+						result=MinimaxWhite( board,  key, movinglist,depth-1,false);
+						if(maxEval<evaluator(board, movinglist,2).getBoardEval()-evaluator(board, movinglist,1).getBoardEval()) {
+							maxEval=evaluator(board, movinglist,2).getBoardEval()-evaluator(board, movinglist,1).getBoardEval();
+							X=movinglist.get(movinglist.size()-1).getX();
+							Y=movinglist.get(movinglist.size()-1).getY();
+							key--;
+							board[X][Y]='-';
+							movinglist.remove(movinglist.size()-1);
+						}
+						else {
+							key--;
+							board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+							movinglist.remove(movinglist.size()-1);
+						}
+					}
+				}
+			}
+			return new int[] {X,Y};
+		}
+		else {
+			int minEval=1000000;
+			int Y=0,X=0;
+			for(int i=scaled[0];i<=scaled[2];i++) {
+				for(int j=scaled[1];j<=scaled[3];j++) {
+					if(board[i][j]!='B'&&board[i][j]!='W') {
+						board[i][j]='B';
+						key++;
+						movinglist.add(new Moves(i,j));
+						result=MinimaxWhite( board,  key, movinglist,depth-1,true);
+						if(minEval>evaluator(board, movinglist,2).getBoardEval()-evaluator(board, movinglist,1).getBoardEval()) {
+							int whiltevalue=evaluator(board, movinglist,2).getBoardEval();
+							int blackvalue=evaluator(board, movinglist,1).getBoardEval();
+							minEval=evaluator(board, movinglist,2).getBoardEval()-evaluator(board, movinglist,1).getBoardEval();
+							X=movinglist.get(movinglist.size()-1).getX();
+							Y=movinglist.get(movinglist.size()-1).getY();
+							key--;
+							board[X][Y]='-';
+							movinglist.remove(movinglist.size()-1);
+						}
+						else {
+						
+							key--;
+							board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+							movinglist.remove(movinglist.size()-1);
+						}
+					}
+				}
+			}return new int[] {X,Y};
+		}
+	}
+
+	public  int[] MinimaxBlack(char[][] board, int key, ArrayList<Moves> movinglist,int depth,boolean maxplayer) {
+		int[] result=new int[] {0,0};
+		if(depth==0) {return new int[] {movinglist.get(movinglist.size()-1).getX(),movinglist.get(movinglist.size()-1).getY()};}
+		if(maxplayer) {
+			int maxEval=-1000000;
+			int Y=0,X=0;
+			for(int i=scaled[0];i<=scaled[2];i++) {
+				for(int j=scaled[1];j<=scaled[3];j++) {
+					if(board[i][j]!='B'&&board[i][j]!='W') {
+						board[i][j]='B';
+						key++;
+						movinglist.add(new Moves(i,j));
+						result=MinimaxBlack( board,  key, movinglist,depth-1,false);
+						if(maxEval<evaluator(board, movinglist,1).getBoardEval()-evaluator(board, movinglist,2).getBoardEval()) {
+							maxEval=evaluator(board, movinglist,1).getBoardEval()-evaluator(board, movinglist,2).getBoardEval();
+							X=movinglist.get(movinglist.size()-1).getX();
+							Y=movinglist.get(movinglist.size()-1).getY();
+							key--;
+							board[X][Y]='-';
+							movinglist.remove(movinglist.size()-1);
+						}
+						else {
+							key--;
+							board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+							movinglist.remove(movinglist.size()-1);
+						}
+					}
+				}
+			}
+			return new int[] {X,Y};
+		}
+		else {
+			int minEval=1000000;
+			int Y=0,X=0;
+			for(int i=scaled[0];i<=scaled[2];i++) {
+				for(int j=scaled[1];j<=scaled[3];j++) {
+					if(board[i][j]!='B'&&board[i][j]!='W') {
+						board[i][j]='W';
+						key++;
+						movinglist.add(new Moves(i,j));
+						result=MinimaxBlack( board,  key, movinglist,depth-1,true);
+						if(minEval>evaluator(board, movinglist,1).getBoardEval()-evaluator(board, movinglist,2).getBoardEval()) {
+							int whiltevalue=evaluator(board, movinglist,2).getBoardEval();
+							int blackvalue=evaluator(board, movinglist,1).getBoardEval();
+							minEval=evaluator(board, movinglist,1).getBoardEval()-evaluator(board, movinglist,2).getBoardEval();
+							X=movinglist.get(movinglist.size()-1).getX();
+							Y=movinglist.get(movinglist.size()-1).getY();
+							key--;
+							board[X][Y]='-';
+							movinglist.remove(movinglist.size()-1);
+						}
+						else {
+						
+							key--;
+							board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+							movinglist.remove(movinglist.size()-1);
+						}
+					}
+				}
+			}return new int[] {X,Y};
+		}
+	}
+	public  int[] MyAI(char[][] board, int key, ArrayList<Moves> movinglist) {
+		int[] result=new int[] {1,1};
 		return result;
 	}
 
@@ -856,14 +1013,13 @@ public class Back_End {
 		if(count==2&&cut1==0&&cut2==3&&cut3==0&&cut4==3&&block1==true){bs.Deadtwo().add(moves);}
 		if(count==2&&cut1==3&&cut2==0&&cut3==3&&cut4==0&&block2==true){bs.Deadtwo().add(moves);}
 		//Live three 
-		if(count==3&&cut1>=1&&cut2>=1&&cut3==0&&cut4==0){bs.Livethree().add(moves);}	
+		if((count==3&&cut1>=1&&cut2>=1&&cut3==0&&cut4==0)&&!(cut1==1&&cut2==1)){bs.Livethree().add(moves);}	
 
-		// bug
 		//if(count==3&&cut1>=1&&cut2==2&&cut4==2){bs.Livethree().add(moves);}
-		if((count==3&&cut1>=2&&cut2>=1&&cut3>=1&&dupli<1)&&!(cut2==2&&cut4==3)&&!(cut3==1&&cut4==1)&&!(cut1==2&&cut3==3)){bs.Livethree().add(moves);}
+		if((count==3&&cut1>=2&&cut2>=1&&cut3>=1&&dupli<1)&&!(cut2==2&&cut4==3)&&!(cut3==1&&cut4==1)&&!(cut1==2&&cut3==3)&&!(count==3&&cut1>=2&&cut2>=1&&cut3==1&&cut4>=2&&dupli>=0&&dupli2>=1)){bs.Livethree().add(moves);}
 		//if(count==3&&cut1==2&&cut2>=1&&cut3==1){bs.Livethree().add(moves);}
 		//if(count==3&&cut1==2&&cut2>=1&&cut3==2){bs.Livethree().add(moves);}
-		if((count==3&&cut1>=1&&cut2>=2&&cut4>=1&&dupli2<1)&&!(cut2==2&&cut4==3)&&!(cut3==1&&cut4==1)&&!(cut1==2&&cut3==3)){bs.Livethree().add(moves);}
+		if((count==3&&cut1>=1&&cut2>=2&&cut4>=1&&dupli2<1)&&!(cut2==2&&cut4==3)&&!(cut3==1&&cut4==1)&&!(cut1==2&&cut3==3)&&!(count==3&&cut1>=1&&cut2>=2&&cut3>=2&&cut4==1&&dupli>=1&&dupli2>=0)){bs.Livethree().add(moves);}
 		//if(count==3&&cut1>=1&&cut2==2&&cut4==1){bs.Livethree().add(moves);}
 
 		//Dead three
@@ -881,9 +1037,9 @@ public class Back_End {
 		if(count==3&&cut1==2&&cut2==0&&cut3==2&&cut4==0&&block2==true){bs.Deadthree().add(moves);}
 
 		//bug
-		if(count==3&&cut1>=2&&cut3==2&&dupli==1){bs.Deadthree().add(moves);}
+		if((count==3&&cut1>=2&&cut3==2&&dupli==1)&&!(count==3&&cut1==2&&cut2==0&&cut3==2&&cut4==0&&block2==true)){bs.Deadthree().add(moves);}
 		if(count==3&&cut2==2&&cut4==4&&dupli2==1){bs.Deadthree().add(moves);}
-		if(count==3&&cut2>=2&&cut4==2&&dupli2==1){bs.Deadthree().add(moves);}
+		if((count==3&&cut2>=2&&cut4==2&&dupli2==1)&&!(count==3&&cut1==0&&cut2==2&&cut3==0&&cut4==2&&block1==true)){bs.Deadthree().add(moves);}
 		if(count==3&&cut1==2&&cut3==4&&dupli==1){bs.Deadthree().add(moves);}
 
 		if(count==3&&cut2==2&&cut4==3){bs.Deadthree().add(moves);}
@@ -897,13 +1053,13 @@ public class Back_End {
 		if(count==4&&cut1>=1&&cut2==0&&block2==true&&cut3==0&&cut4==0){bs.Deadfour().add(moves);}
 		if(count==4&&cut1==0&&cut2>=1&&block1==true&&cut3==0&&cut4==0){bs.Deadfour().add(moves);}
 
-		if(count==4&&cut1>=0&&cut2==1&&cut3==0&&cut4==3){bs.Deadfour().add(moves);}
-		if(count==4&&cut1>=1&&cut2>=0&&cut3==3&&cut4==0){bs.Deadfour().add(moves);}
-		//	if(count==4&&cut1>=0&&cut2>=1&&cut3==0&&cut4==1){bs.Deadfour().add(moves);}
+		if(count==4&&cut1>=0&&cut2==1&&cut3==0&&cut4==3&&dupli2<1){bs.Deadfour().add(moves);}
+		if(count==4&&cut1>=1&&cut2>=0&&cut3==3&&cut4==0&&dupli<1){bs.Deadfour().add(moves);}
+		if(count==4&&cut1>=0&&cut2>=0&&cut3==1&&cut4==0){bs.Deadfour().add(moves);}
 		if(count==4&&cut1>=0&&cut2>=0&&cut3==0&&cut4==1){bs.Deadfour().add(moves);}
 
-		if(count==4&&cut1>=0&&cut2>=0&&cut3==2&&cut4==0){bs.Deadfour().add(moves);}
-		if(count==4&&cut1>=0&&cut2>=0&&cut3==0&&cut4==2){bs.Deadfour().add(moves);}
+		if(count==4&&cut1>=0&&cut2>=0&&cut3==2&&cut4==0&&dupli<1){bs.Deadfour().add(moves);}
+		if(count==4&&cut1>=0&&cut2>=0&&cut3==0&&cut4==2&&dupli2<1){bs.Deadfour().add(moves);}
 
 	}
 }
