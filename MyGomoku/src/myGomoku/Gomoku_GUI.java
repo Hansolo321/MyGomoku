@@ -76,6 +76,7 @@ public class Gomoku_GUI {
 	private BoardState evaluresultB;
 	private BoardState evaluresultW;
 	private String AIversion="Greedy";
+	private int depth=3;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -363,7 +364,7 @@ public class Gomoku_GUI {
 								if(AIversion.equals("Greedy")) {
 									AI=backend.Greedy(board,k,movinglist);}
 								else if(AIversion.equals("Minimax")) {
-									AI=backend.Minimax(board,k,movinglist,3,true);}
+									AI=backend.Minimax(board,k,movinglist,depth,true);}
 								else {
 									AI=backend.MyAI(board,k,movinglist);
 								}
@@ -498,7 +499,7 @@ public class Gomoku_GUI {
 									if(AIversion.equals("Greedy")) {
 										AI=backend.Greedy(board,k,movinglist);}
 									else if(AIversion.equals("Minimax")) {
-										AI=backend.Minimax(board,k,movinglist,3,true);}
+										AI=backend.Minimax(board,k,movinglist,depth,true);}
 									else {
 										AI=backend.MyAI(board,k,movinglist);
 									}
@@ -780,7 +781,7 @@ public class Gomoku_GUI {
 		AIversion2.setBounds(1075, 524, 97, 25);
 		frame.getContentPane().add(AIversion2);
 
-		JButton AIversion3 = new JButton("My AI1");
+		JButton AIversion3 = new JButton("My AI");
 		AIversion3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AIversion="MyAI";
@@ -844,7 +845,7 @@ public class Gomoku_GUI {
 							if(AIversion.equals("Greedy")) {
 								AI=backend.Greedy(board,k,movinglist);}
 							else if(AIversion.equals("Minimax")) {
-								AI=backend.Minimax(board,k,movinglist,3,true);}
+								AI=backend.Minimax(board,k,movinglist,depth,true);}
 							else {
 								AI=backend.MyAI(board,k,movinglist);
 							}

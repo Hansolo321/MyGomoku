@@ -318,6 +318,7 @@ public class Back_End {
 			}return new int[] {X,Y};
 		}
 	}
+	
 	public  int[] MyAI(char[][] board, int key, ArrayList<Moves> movinglist) {
 		int[] result=new int[] {1,1};
 		return result;
@@ -1016,10 +1017,10 @@ public class Back_End {
 		if((count==3&&cut1>=1&&cut2>=1&&cut3==0&&cut4==0)&&!(cut1==1&&cut2==1)){bs.Livethree().add(moves);}	
 
 		//if(count==3&&cut1>=1&&cut2==2&&cut4==2){bs.Livethree().add(moves);}
-		if((count==3&&cut1>=2&&cut2>=1&&cut3>=1&&dupli<1)&&!(cut2==2&&cut4==3)&&!(cut3==1&&cut4==1)&&!(cut1==2&&cut3==3)&&!(count==3&&cut1>=2&&cut2>=1&&cut3==1&&cut4>=2&&dupli>=0&&dupli2>=1)){bs.Livethree().add(moves);}
+		if((count==3&&cut1>=2&&cut2>=1&&cut3>=1&&dupli<1)&&!(cut2==2&&cut4==3)&&!(cut3==1&&cut4==1)&&!(cut1==2&&cut3==3)&&!(count==3&&cut1>=2&&cut2>=1&&cut3==1&&cut4>=2&&dupli>=0&&dupli2>=1)){bs.JLivethree().add(moves);}
 		//if(count==3&&cut1==2&&cut2>=1&&cut3==1){bs.Livethree().add(moves);}
 		//if(count==3&&cut1==2&&cut2>=1&&cut3==2){bs.Livethree().add(moves);}
-		if((count==3&&cut1>=1&&cut2>=2&&cut4>=1&&dupli2<1)&&!(cut2==2&&cut4==3)&&!(cut3==1&&cut4==1)&&!(cut1==2&&cut3==3)&&!(count==3&&cut1>=1&&cut2>=2&&cut3>=2&&cut4==1&&dupli>=1&&dupli2>=0)){bs.Livethree().add(moves);}
+		if((count==3&&cut1>=1&&cut2>=2&&cut4>=1&&dupli2<1)&&!(cut2==2&&cut4==3)&&!(cut3==1&&cut4==1)&&!(cut1==2&&cut3==3)&&!(count==3&&cut1>=1&&cut2>=2&&cut3>=2&&cut4==1&&dupli>=1&&dupli2>=0)){bs.JLivethree().add(moves);}
 		//if(count==3&&cut1>=1&&cut2==2&&cut4==1){bs.Livethree().add(moves);}
 
 		//Dead three
@@ -1053,13 +1054,13 @@ public class Back_End {
 		if(count==4&&cut1>=1&&cut2==0&&block2==true&&cut3==0&&cut4==0){bs.Deadfour().add(moves);}
 		if(count==4&&cut1==0&&cut2>=1&&block1==true&&cut3==0&&cut4==0){bs.Deadfour().add(moves);}
 
-		if(count==4&&cut1>=0&&cut2==1&&cut3==0&&cut4==3&&dupli2<1){bs.Deadfour().add(moves);}
-		if(count==4&&cut1>=1&&cut2>=0&&cut3==3&&cut4==0&&dupli<1){bs.Deadfour().add(moves);}
-		if(count==4&&cut1>=0&&cut2>=0&&cut3==1&&cut4==0){bs.Deadfour().add(moves);}
-		if(count==4&&cut1>=0&&cut2>=0&&cut3==0&&cut4==1){bs.Deadfour().add(moves);}
+		if(count==4&&cut1>=0&&cut2==1&&cut3==0&&cut4==3&&dupli2<1){bs.JDeadfour().add(moves);}
+		if(count==4&&cut1>=1&&cut2>=0&&cut3==3&&cut4==0&&dupli<1){bs.JDeadfour().add(moves);}
+		if(count==4&&cut1>=0&&cut2>=0&&cut3==1&&cut4==0){bs.JDeadfour().add(moves);}
+		if(count==4&&cut1>=0&&cut2>=0&&cut3==0&&cut4==1){bs.JDeadfour().add(moves);}
 
-		if(count==4&&cut1>=0&&cut2>=0&&cut3==2&&cut4==0&&dupli<1){bs.Deadfour().add(moves);}
-		if(count==4&&cut1>=0&&cut2>=0&&cut3==0&&cut4==2&&dupli2<1){bs.Deadfour().add(moves);}
+		if(count==4&&cut1>=0&&cut2>=0&&cut3==2&&cut4==0&&dupli<1){bs.JDeadfour().add(moves);}
+		if(count==4&&cut1>=0&&cut2>=0&&cut3==0&&cut4==2&&dupli2<1){bs.JDeadfour().add(moves);}
 
 	}
 }
