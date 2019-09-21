@@ -76,7 +76,7 @@ public class Gomoku_GUI {
 	private BoardState evaluresultB;
 	private BoardState evaluresultW;
 	private String AIversion="Greedy";
-	private int depth=3;
+	public static int depth=4;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -361,12 +361,18 @@ public class Gomoku_GUI {
 						if(five.size()!=5) {
 							for(int n=0;n<iteration;n++) {
 								starttime = System.nanoTime();
-								if(AIversion.equals("Greedy")) {
-									AI=backend.Greedy(board,k,movinglist);}
-								else if(AIversion.equals("Minimax")) {
-									AI=backend.Minimax(board,k,movinglist,depth,true);}
+//								if(AIversion.equals("Greedy")) {
+//									AI=backend.Greedy(board,k,movinglist);}
+//								else if(AIversion.equals("Minimax")) {
+//									AI=backend.Minimax(board,k,movinglist,depth,true);}
+//								else {
+//									AI=backend.MyAI(board,k,movinglist);
+//								}
+								if(k%2==0) {
+									AI=backend.Minimax(board,k,movinglist,depth,true);
+								}
 								else {
-									AI=backend.MyAI(board,k,movinglist);
+									AI=backend.Greedy(board,k,movinglist);
 								}
 								endtime = System.nanoTime();
 								avgtime+=(endtime-starttime);
@@ -409,7 +415,6 @@ public class Gomoku_GUI {
 
 		BoardPanel.setBounds(41, 20, 589,589);
 		BoardPanel.setBackground(new Color(0,250,154));
-
 		frame.getContentPane().add(BoardPanel);
 
 		BoardPanel.addMouseListener(new MouseAdapter() {

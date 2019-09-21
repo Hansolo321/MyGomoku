@@ -83,7 +83,6 @@ public class BoardState {
 		if(FiveInrow.size()!=0) {boardEval+=100000;}
 		if((Livefour.size()==1)||(Deadfour.size()==2)||(Deadfour.size()==1&&Livethree.size()==1)||(JDeadfour.size()==2)||(JDeadfour.size()==1&&Livethree.size()==1)) {boardEval+=10000;}
 		if((Deadfour.size()==1&&JLivethree.size()==1)||(JDeadfour.size()==1&&JLivethree.size()==1)) {boardEval+=10000;}
-
 		if(Livethree.size()+JLivethree.size()==2) {boardEval+=5000;}
 		if(Deadthree.size()==1&&((Livethree.size()==1)||(JLivethree.size()==1))) {boardEval+=1000;}
 		if(Deadfour.size()!=0) {boardEval+=500;}
