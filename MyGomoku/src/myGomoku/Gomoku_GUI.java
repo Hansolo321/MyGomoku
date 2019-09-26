@@ -4,6 +4,7 @@ package myGomoku;
  * This is the project for creative component in ISU
  */
 import java.awt.Color;
+import myGomoku.Back_End;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -67,6 +68,7 @@ public class Gomoku_GUI {
 	private Timer TM=null;
 	private Timer TM1=null;
 	private ArrayList<Moves> OpeningAry = new ArrayList<Moves>();
+	private ArrayList<Moves> Candidate = new ArrayList<Moves>();
 	private boolean AT1animation=false;
 	private boolean Animation=true;
 	private boolean isOpening=false;
@@ -76,7 +78,8 @@ public class Gomoku_GUI {
 	private BoardState evaluresultB;
 	private BoardState evaluresultW;
 	private String AIversion="Greedy";
-	public static int depth=4;
+	public static int depth=2;
+	public static int Mydepth=6;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -256,6 +259,20 @@ public class Gomoku_GUI {
 						g.drawLine(evaluatorrange[0]*39+1+20-12, evaluatorrange[3]*39+1+20+12, evaluatorrange[2]*39+1+20+12, evaluatorrange[3]*39+1+20+12);
 						g.drawLine(evaluatorrange[0]*39+1+20-12, evaluatorrange[1]*39+1+20-12,evaluatorrange[0]*39+1+20-12, evaluatorrange[3]*39+1+20+12);
 						g.drawLine(evaluatorrange[2]*39+1+20+12, evaluatorrange[1]*39+1+20-12,  evaluatorrange[2]*39+1+20+12, evaluatorrange[3]*39+1+20+12);}
+
+					for(int i=0;i<Candidate.size();i++) {
+						int max = Candidate.get(0).getPercentage();
+						int x=Candidate.get(i).getX()*39+1-5+20;
+						int y=Candidate.get(i).getY()*39+1-5+20;
+						if(Candidate.get(i).getPercentage()==max) {
+							g.setColor(Color.RED);
+							g.fillOval(x, y, 10, 10);}
+						else {
+							g.setColor(Color.BLUE);
+							g.fillOval(x, y, 10, 10);	
+						}
+					}
+					Candidate.clear();
 				}
 				if(AT1animation) {
 					TM.start();
@@ -322,7 +339,6 @@ public class Gomoku_GUI {
 								Analysis1.setText("Opening book is processing!!");
 								OpeningFlag=false;
 							}
-
 						}
 						else if(!OpeningFlag) {
 							OpeningFlag=true;
@@ -341,12 +357,10 @@ public class Gomoku_GUI {
 							labelindex(movinglist);	
 							k++;
 						}
-
 						if(AT1animation) {flag=false;}
 						else {flag=true;isOpening=false;}
 					}
 				}
-
 				if(!gameend&&k>=5) {
 					flag=true;
 					while(!gameend&&flag==true) {
@@ -361,18 +375,20 @@ public class Gomoku_GUI {
 						if(five.size()!=5) {
 							for(int n=0;n<iteration;n++) {
 								starttime = System.nanoTime();
-//								if(AIversion.equals("Greedy")) {
-//									AI=backend.Greedy(board,k,movinglist);}
-//								else if(AIversion.equals("Minimax")) {
-//									AI=backend.Minimax(board,k,movinglist,depth,true);}
-//								else {
-//									AI=backend.MyAI(board,k,movinglist);
-//								}
-								if(k%2==0) {
-									AI=backend.Minimax(board,k,movinglist,depth,true);
+								//								if(AIversion.equals("Greedy")) {
+								//									AI=backend.Greedy(board,k,movinglist);}
+								//								else if(AIversion.equals("Minimax")) {
+								//									AI=backend.Minimax(board,k,movinglist,depth,true);}
+								//								else {
+								//									AI=backend.MyAI(board,k,movinglist);
+								//								}
+								if(k%2==0) {//white
+									AI=backend.MyAI(board,k,movinglist,Mydepth,true);
+									//AI=backend.MyAI(board,k,movinglist,depth,true);
 								}
 								else {
-									AI=backend.Greedy(board,k,movinglist);
+									//AI=backend.Greedy(board,k,movinglist);
+									AI=backend.Minimax(board,k,movinglist,depth,true);
 								}
 								endtime = System.nanoTime();
 								avgtime+=(endtime-starttime);
@@ -389,6 +405,9 @@ public class Gomoku_GUI {
 							else {
 								board[AI[0]][AI[1]]='B';
 								movinglist.add (new Moves( AI[0], AI[1], k, "BLACK")) ;
+							}
+							if(k>=5) {
+								Candidate= backend.SortedCandidate(movinglist,board);
 							}
 							five.clear();
 							endCheck();
@@ -416,7 +435,6 @@ public class Gomoku_GUI {
 		BoardPanel.setBounds(41, 20, 589,589);
 		BoardPanel.setBackground(new Color(0,250,154));
 		frame.getContentPane().add(BoardPanel);
-
 		BoardPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -431,7 +449,14 @@ public class Gomoku_GUI {
 					Analysis.append("      It's an OCCUPIED postion!!");
 				}
 				else if(!gameend){
-					Analysis.append("     Release to comfile the reqest. \n     Or hold it and move to outside        board to cancel the reqeust.\n\nIt takes time by using Minimax algorithm.");
+
+					if(AIversion.equals("Greedy")) {
+						Analysis.append("     Release to comfile the reqest. \n     Or hold it and move to outside        board to cancel the reqeust.\n\nIt takes time by using Greedy algorithm.");}
+					else if(AIversion.equals("Minimax")) {
+						Analysis.append("     Release to comfile the reqest. \n     Or hold it and move to outside        board to cancel the reqeust.\n\nIt takes time by using Minimax algorithm.");}
+
+					else {
+						Analysis.append("     Release to comfile the reqest. \n     Or hold it and move to outside        board to cancel the reqeust.\n\nIt takes time by using Minimax and New Heuristic algorithm.");}
 				}
 				else {
 					Analysis.setForeground(Color.RED);
@@ -473,7 +498,6 @@ public class Gomoku_GUI {
 								AI[1]=OpeningAry.get(key).getY();
 								OpeningAry.clear();
 
-
 								if(k%2==0) {
 									board[AI[0]][AI[1]]='W';
 									movinglist.add (new Moves( AI[0], AI[1], k, "WHITE")) ;
@@ -506,7 +530,7 @@ public class Gomoku_GUI {
 									else if(AIversion.equals("Minimax")) {
 										AI=backend.Minimax(board,k,movinglist,depth,true);}
 									else {
-										AI=backend.MyAI(board,k,movinglist);
+										AI=backend.MyAI(board,k,movinglist,Mydepth,true);
 									}
 									endtime = System.nanoTime();
 									avgtime+=(endtime-starttime);
@@ -536,7 +560,9 @@ public class Gomoku_GUI {
 							Analysis1.setText("Evaluator is OFF!!\n\nClick 'Evaluator' button to turn it on!!\n\n");
 							if(k<5) {Analysis1.append("Opening book is processing!!");}
 						}
-
+						if(k>=5) {
+							Candidate= backend.SortedCandidate(movinglist,board);
+						}
 						five.clear();
 						endCheck();
 						BoardPanel.revalidate();
@@ -569,6 +595,14 @@ public class Gomoku_GUI {
 				evaluresultW= backend.evaluator(board, movinglist,2);
 				Analysis1.append("\nWhite side board state and value:");
 				Analysis1.append(evaluresultW.ToString());
+
+				for(int i=0;i<Candidate.size();i++) {
+					Analysis.append(Candidate.get(i).PercentageToString());
+				}
+
+//				ArrayList<Moves> bestpath=backend.BestPath();
+//				Analysis.append(bestpath.toString());
+					
 			}
 		});
 
@@ -700,8 +734,6 @@ public class Gomoku_GUI {
 				AT1animation=false;
 				AIboolean=false;
 				if(!pvp) {
-
-
 					if(k<5) {
 						OpeningBook ob = new OpeningBook();
 						isOpening=true;
@@ -839,7 +871,6 @@ public class Gomoku_GUI {
 				else if(!gameend&&k>=5) {
 					if(evaluator) {
 						evaluatorrange=backend.scale(movinglist);
-
 					}
 					else {
 						backend.scaled=new int[] {0,0,14,14};
@@ -852,7 +883,7 @@ public class Gomoku_GUI {
 							else if(AIversion.equals("Minimax")) {
 								AI=backend.Minimax(board,k,movinglist,depth,true);}
 							else {
-								AI=backend.MyAI(board,k,movinglist);
+								AI=backend.MyAI(board,k,movinglist,Mydepth,true);
 							}
 							endtime = System.nanoTime();
 							avgtime+=(endtime-starttime);
