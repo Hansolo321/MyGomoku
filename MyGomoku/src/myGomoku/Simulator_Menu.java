@@ -19,7 +19,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-
 public class Simulator_Menu implements Runnable{
 
 	public JFrame frame = new JFrame();
@@ -33,10 +32,11 @@ public class Simulator_Menu implements Runnable{
 	private JButton ApllyButton = new JButton();
 	public String White="Greedy";
 	public String Black="Greedy";
+	public int k=1;
+	public boolean AT1animation=false;
+	public boolean Animation=true;
 	public char[][] board;
 	public ArrayList<Moves> movinglist=new ArrayList<Moves>();
-
-
 
 	@Override
 	public void run() {
@@ -49,6 +49,8 @@ public class Simulator_Menu implements Runnable{
 		beam = new ImageIcon(this.getClass().getClassLoader().getResource("GomokuIcon.png"));
 		Image icon=beam.getImage();
 		frame.setIconImage(icon);
+		//frame.pack();
+		frame.setLocationRelativeTo(null);
 
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -177,41 +179,36 @@ public class Simulator_Menu implements Runnable{
 		ApllyButton = new JButton("Apply&Start");
 		ApllyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				if(GreedyB.isSelected()) {
-
 					Black="Greedy";
 				}
 				else if(MinimaxB.isSelected()) {
-
 					Black="Minimax";
 				}
 				else if(MyAIB.isSelected()) {
-
 					Black="MyAI";
 				}
 				if(GreedyW.isSelected()) {
-
 					White="Greedy";
 				}
 				else if(MinimaxW.isSelected()) {
-
 					White="Minimax";
 				}
 				else if(MyAIW.isSelected()) {
-
 					White="MyAI";
 				}
 				frame.setVisible(false);
-				Gomoku_GUI gui = new Gomoku_GUI();
+				Gomoku_GUI gui = new Gomoku_GUI();	
+				gui.k=k;
 				gui.simuApply=true;
 				gui.simuB=Black;
 				gui.simuW=White;
 				gui.board=board;
 				gui.movinglist=movinglist;
+				gui.Animation=Animation;
+				gui.AT1animation=AT1animation;
 				gui.frame.setVisible(true);
-		//		gui.frame.action(gui.frame.action(arg0, arg1);, true);
-				//TO DO make simulate button is pressed
+				gui.btnsimulate.doClick();
 			}
 		});
 		ApllyButton.setFont(new Font("Times New Roman", Font.BOLD, 18));
@@ -231,7 +228,10 @@ public class Simulator_Menu implements Runnable{
 				gui.simuB=Black;
 				gui.simuW=White;
 				gui.movinglist=movinglist;
+				gui.Animation=Animation;
+				gui.AT1animation=AT1animation;
 				gui.frame.setVisible(true);
+				
 			}
 		});
 		Cancelbtn.setForeground(Color.GREEN);

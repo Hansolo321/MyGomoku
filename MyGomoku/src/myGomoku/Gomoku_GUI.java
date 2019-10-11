@@ -3,6 +3,7 @@ package myGomoku;
  * Author: Han Liao (lhan@iastate.edu or leslieileo@gmail.com)
  * This is the project for creative component in ISU
  */
+
 import java.awt.Color;
 import myGomoku.Back_End;
 import java.awt.EventQueue;
@@ -56,7 +57,7 @@ public class Gomoku_GUI {
 	private JLabel num1= new JLabel();
 	private JTextArea Analysis = new JTextArea();
 	private JTextArea Analysis1 = new JTextArea();
-	private int k=1;
+	public int k=1;
 	private boolean pvp=true;
 	private boolean gameend=false;
 	private Back_End backend= new Back_End();
@@ -64,27 +65,26 @@ public class Gomoku_GUI {
 	private boolean readfile=false;
 	private boolean evaluator=true;
 	private int[] evaluatorrange=new int[4];
-	private JButton btnsimulate = new JButton("Simulate");
+	public JButton btnsimulate = new JButton("Simulate");
 	private Timer TM=null;
 	private Timer TM1=null;
 	private ArrayList<Moves> OpeningAry = new ArrayList<Moves>();
 	private ArrayList<Moves> Candidate = new ArrayList<Moves>();
-	private boolean AT1animation=false;
-	private boolean Animation=true;
+	public boolean AT1animation=false;
+	public boolean Animation=true;
 	private boolean isOpening=false;
 	private boolean OpeningFlag=true;
 	private boolean AIboolean=false;
-	private int Delay=500;
+	private int Delay=10;
 	private BoardState evaluresultB;
 	private BoardState evaluresultW;
 	private String AIversion="Greedy";
 	public static int depth=2;
-	public static int Mydepth=6;
+	public static int Mydepth=5;
 	public String simuW="Greedy";
 	public String simuB="Minimax";
 	public boolean simuApply=false;
 	Simulator_Menu SM = new Simulator_Menu();
-	//Simulator_Window SW = new Simulator_Window();
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -131,13 +131,13 @@ public class Gomoku_GUI {
 		animationlabel=new JLabel("ON");
 		animationlabel.setForeground(Color.BLACK);
 		animationlabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 20));
-		animationlabel.setBounds(891, 575, 40, 35);
+		animationlabel.setBounds(881, 575, 40, 35);
 		frame.getContentPane().add(animationlabel);
 
 		evaluatorlabel=new JLabel("ON");
 		evaluatorlabel.setForeground(Color.BLACK);
 		evaluatorlabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 20));
-		evaluatorlabel.setBounds(1032, 575, 40, 35);
+		evaluatorlabel.setBounds(1022, 575, 40, 35);
 		frame.getContentPane().add(evaluatorlabel);
 		int damn=575;
 		if(pvp) {
@@ -146,7 +146,7 @@ public class Gomoku_GUI {
 		modelabel=new JLabel("->                   <-");
 		modelabel.setForeground(Color.RED);
 		modelabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 15));
-		modelabel.setBounds(654 , damn, 150, 35);
+		modelabel.setBounds(644 , damn, 150, 35);
 		frame.getContentPane().add(modelabel);
 
 		BoardPanel = new JPanel() {
@@ -287,7 +287,64 @@ public class Gomoku_GUI {
 			}
 		};
 
-		
+		JButton btnstop = new JButton("STOP");
+		btnstop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				AIboolean=false;
+				TM.stop();
+				TM1.stop();
+				AT1animation=false;
+				Analysis1.setForeground(Color.RED);
+				Analysis1.setText("The AIV1 mode stopped!!\nClick 'AI V1' to simulate the rest.");
+
+			}
+		});
+		btnstop.setBackground(new Color(255,99,71));
+		btnstop.setBounds(784, 524, 97, 25);
+		frame.getContentPane().add(btnstop);
+
+		JButton btnNewGame = new JButton("New Game");
+		btnNewGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				TM1.stop();
+				TM.stop();
+				AT1animation=false;
+				AIboolean=false;
+				Analysis.setForeground(Color.BLACK);
+				Analysis.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
+				k=1;
+				simuApply=false;
+				gameend=false;
+				five.clear();
+				BoardPanel.removeAll();
+				movinglist.removeAll(movinglist);
+				num1.removeAll();
+				num.removeAll();
+				for(int i=0;i<15;i++) {
+					for(int j=0;j<15;j++) {
+						board[i][j]='-';
+					}
+				}
+				BoardPanel.revalidate();
+				BoardPanel.repaint();
+				Analysis.setText("New game started !!\n\n");
+				if(pvp) {Analysis.append("Mode is: PvP.\nClick 'PVP' button to switch PvAI mode");}
+				else {Analysis.append("Mode is: PvAI.\nClick 'PVP' button to switch PvP mode");}
+				Analysis1.setText("Board evaluator information will be shown there: \n\n");
+				String switch1 = null;
+				if(evaluator) {switch1="ON";Analysis1.setForeground(Color.BLACK);}
+				else {switch1="OFF";Analysis1.setForeground(Color.RED);}
+				Analysis1.append("Evaluator is : "+switch1+"\n");
+				if(Animation) {
+					Analysis1.append("Animation is : ON");}
+				else {Analysis1.append("Animation is : OFF");}
+			}
+		});
+		btnNewGame.setBackground(new Color(0,255,0));
+		btnNewGame.setBounds(658, 470, 97, 25);
+		frame.getContentPane().add(btnNewGame);
+
 		ActionListener FkU=new ActionListener() {	
 			public void actionPerformed(ActionEvent arg0) {
 				AIboolean=true;
@@ -299,186 +356,175 @@ public class Gomoku_GUI {
 				else {Analysis1.append("Evaluator is: OFF\n");}
 
 				if(!simuApply) {
-				Simulator_Menu SM = new Simulator_Menu();
-				//new Thread(new Simulator_Menu()).start();
-				SM.run();
-				SM.board=board;
-				SM.movinglist=movinglist;
-				SM.Black=simuB;
-				SM.White=simuW;
-				frame.dispose();
+					Simulator_Menu SM = new Simulator_Menu();
+					SM.run();
+					SM.board=board;
+					SM.k=k;
+					SM.movinglist=movinglist;
+					SM.Black=simuB;
+					SM.White=simuW;
+					SM.Animation=Animation;
+					SM.AT1animation=AT1animation;
+					frame.dispose();
 				}
-				//simuApply=false;
-				
-//				
-//				while (true) {
-//					if (SM.frame.isVisible()) {
-//						System.out.print("in");
-//					}
-//					else {
-//						System.out.print("out");
-//						break;
-//					}
-//					try {
-//						Thread.sleep(1000);
-//					} catch (InterruptedException e1) {
-//						break;
-//					}
-//				}
 
-				
+				if(simuApply) {
+					Analysis1.append("Processing.");
+					String a;
+					for( int i=1;i<=k;i++) {
+						if(i%3==0) {
+							Analysis1.append(".");
+							if(i%15==0){
+								if(evaluator) {
+									a="Current mode:AI V1\nYou can press 'STOP' to terminate.\n\nEvaluator is: ON\nProcessing";}
+								else {a= "Current mode:AI V1\nYou can press 'STOP' to terminate.\n\nEvaluator is: OFF\nProcessing";}
+								Analysis1.setText(a);
+							}
+						}
+					}
+					if(Animation) {
+						TM= new Timer(Delay,this);
+						TM.setRepeats(false);}
+					if(gameend) {
+						btnstop.doClick();
+						simuApply=false;
+						TM.stop();
+						AT1animation=false;
+						BoardPanel.repaint();
+						Analysis1.setForeground(Color.RED);
+						Analysis1.setText("Game is over.\nClick 'New game' button to clear board");
 
-				
-				//	Analysis1.setText(SM.Black);
-
-				//	Analysis1.append(SM.White);
-
-
-
-								Analysis1.append("Processing.");
-								String a;
-								for( int i=1;i<=k;i++) {
-									if(i%3==0) {
-										Analysis1.append(".");
-										if(i%15==0){
-											if(evaluator) {
-												a="Current mode:AI V1\nYou can press 'STOP' to terminate.\n\nEvaluator is: ON\nProcessing";}
-											else {a= "Current mode:AI V1\nYou can press 'STOP' to terminate.\n\nEvaluator is: OFF\nProcessing";}
-											Analysis1.setText(a);
-										}
-									}
-								}
-								if(Animation) {
-									TM= new Timer(Delay,this);
-									TM.setRepeats(false);}
-								if(gameend) {
-									TM.stop();
-									AT1animation=false;
+					}
+					else if(Animation){
+						AT1animation=true;
+					}
+					else {
+						AT1animation=false;
+					}
+					if(!gameend&&k<5) {
+						while(flag==true&&k<5) {
+							if(k<5&&OpeningFlag==true) {
+								OpeningBook ob= new OpeningBook();	
+								OpeningAry=ob.Opeing(movinglist,k);
+								Random rand=new Random();
+								int	 key=rand.nextInt(OpeningAry.size());
+								AI[0]=OpeningAry.get(key).getX();
+								AI[1]=OpeningAry.get(key).getY();
+								if(!isOpening) {
+									TM1= new Timer(Delay,this);
+									TM1.setRepeats(false);
+									isOpening=true;
+									BoardPanel.revalidate();
 									BoardPanel.repaint();
-									Analysis1.setForeground(Color.RED);
-									Analysis1.setText("Game is over.\nClick 'New game' button to clear board");
+									Analysis1.setText("Opening book is processing!!");
+									OpeningFlag=false;
 								}
-								else if(Animation){
-									AT1animation=true;
+							}
+							else if(!OpeningFlag) {
+								OpeningFlag=true;
+								TM1.stop();
+								if(k%2==0) {
+									board[AI[0]][AI[1]]='W';
+									movinglist.add (new Moves( AI[0], AI[1], k, "WHITE")) ;
 								}
 								else {
-									AT1animation=false;
+									board[AI[0]][AI[1]]='B';
+									movinglist.add (new Moves( AI[0], AI[1], k, "BLACK")) ;
 								}
-								if(!gameend&&k<5) {
-									while(flag==true&&k<5) {
-										if(k<5&&OpeningFlag==true) {
-											OpeningBook ob= new OpeningBook();	
-											OpeningAry=ob.Opeing(movinglist,k);
-											Random rand=new Random();
-											int	 key=rand.nextInt(OpeningAry.size());
-											AI[0]=OpeningAry.get(key).getX();
-											AI[1]=OpeningAry.get(key).getY();
-											if(!isOpening) {
-												TM1= new Timer(Delay,this);
-												TM1.setRepeats(false);
-												isOpening=true;
-												BoardPanel.revalidate();
-												BoardPanel.repaint();
-												Analysis1.setText("Opening book is processing!!");
-												OpeningFlag=false;
-											}
-										}
-										else if(!OpeningFlag) {
-											OpeningFlag=true;
-											TM1.stop();
-											if(k%2==0) {
-												board[AI[0]][AI[1]]='W';
-												movinglist.add (new Moves( AI[0], AI[1], k, "WHITE")) ;
-											}
-											else {
-												board[AI[0]][AI[1]]='B';
-												movinglist.add (new Moves( AI[0], AI[1], k, "BLACK")) ;
-											}
-											Analysis1.setText("Board evaluator information will be shown there: \n\nEvaluator is on by default.\nAnimation is on by default.\n\nYou can turn it off by pressing 'Evaluator' button\n\n");
-											BoardPanel.revalidate();
-											BoardPanel.repaint();	
-											labelindex(movinglist);	
-											k++;
-										}
-										if(AT1animation) {flag=false;}
-										else {flag=true;isOpening=false;}
+								Analysis1.setText("Board evaluator information will be shown there: \n\nEvaluator is on by default.\nAnimation is on by default.\n\nYou can turn it off by pressing 'Evaluator' button\n\n");
+								BoardPanel.revalidate();
+								BoardPanel.repaint();	
+								labelindex(movinglist);	
+								k++;
+							}
+							if(AT1animation) {flag=false;}
+							else {flag=true;isOpening=false;}
+						}
+					}
+					if(!gameend&&k>=5) {
+						flag=true;
+						while(!gameend&&flag==true) {
+
+							if(evaluator) {
+								evaluatorrange=backend.scale(movinglist);
+
+							}
+							else {
+								backend.scaled=new int[] {0,0,14,14};
+							}
+							if(five.size()!=5) {
+								for(int n=0;n<iteration;n++) {
+									starttime = System.nanoTime();
+									if(k%2==0) {//white
+										if(simuW=="MyAI") {
+											AI=backend.MyAI(board,k,movinglist,Mydepth,true);
+											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
+											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");}
+										else if(simuW=="Greedy") {AI=backend.Greedy(board,k,movinglist);}
+										else if(simuW=="Minimax") {
+											AI=backend.Minimax(board,k,movinglist,depth,true);
+											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
+											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");}
+										Analysis1.append("\nBlack side Algo: "+simuB+"\n");
+										Analysis1.append("White side Algo: "+simuW);
 									}
-								}
-								if(!gameend&&k>=5) {
-									flag=true;
-									while(!gameend&&flag==true) {
-				
-										if(evaluator) {
-											evaluatorrange=backend.scale(movinglist);
-				
-										}
-										else {
-											backend.scaled=new int[] {0,0,14,14};
-										}
-										if(five.size()!=5) {
-											for(int n=0;n<iteration;n++) {
-												starttime = System.nanoTime();
-												if(k%2==0) {//white
-													if(simuW=="MyAI") {AI=backend.MyAI(board,k,movinglist,Mydepth,true);}
-													else if(simuW=="Greedy") {AI=backend.Greedy(board,k,movinglist);}
-													else if(simuW=="Minimax") {AI=backend.Minimax(board,k,movinglist,depth,true);}
-													Analysis1.append("\n\nBlack side Algo: "+simuB+"\n\n");
-													Analysis1.append("White side Algo: "+simuW);
-												}
+									else {
+										if(simuB=="MyAI") {
+											AI=backend.MyAI(board,k,movinglist,Mydepth,true);
+											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
+											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");}
+										else if(simuB=="Greedy") {AI=backend.Greedy(board,k,movinglist);}
+										else if(simuB=="Minimax") {
+											AI=backend.Minimax(board,k,movinglist,depth,true);
+											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
+											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");}
+										Analysis1.append("\nBlack side Algo: "+simuB+"\n");
+										Analysis1.append("White side Algo: "+simuW);
 
-
-												else {
-													if(simuB=="MyAI") {AI=backend.MyAI(board,k,movinglist,Mydepth,true);}
-													else if(simuB=="Greedy") {AI=backend.Greedy(board,k,movinglist);}
-													else if(simuB=="Minimax") {AI=backend.Minimax(board,k,movinglist,depth,true);}
-													Analysis1.append("\n\nBlack side Algo: "+simuB+"\n\n");
-													Analysis1.append("White side Algo: "+simuW);
-
-												}
-												endtime = System.nanoTime();
-												avgtime+=(endtime-starttime);
-											}
-											avgtime/=iteration;
-											if(k%2==0) {
-												board[AI[0]][AI[1]]='W';
-												movinglist.add (new Moves( AI[0], AI[1], k, "WHITE")) ;
-											}
-											else if(k<=224){
-												board[AI[0]][AI[1]]='B';
-												movinglist.add (new Moves( AI[0], AI[1], k, "BLACK")) ;
-											}
-											else {
-												board[AI[0]][AI[1]]='B';
-												movinglist.add (new Moves( AI[0], AI[1], k, "BLACK")) ;
-											}
-											if(k>=5) {
-												Candidate= backend.SortedCandidate(movinglist,board);
-											}
-											five.clear();
-											endCheck();
-											BoardPanel.revalidate();
-											BoardPanel.repaint();
-											labelindex(movinglist);
-											if(five.size()!=0||k==225) {
-												gameend=true;
-											} 
-										}
-										k++;
-										if(AT1animation) {flag=false;}
-										else {flag=true;}
 									}
+									endtime = System.nanoTime();
+									avgtime+=(endtime-starttime);
 								}
-								if(gameend) {
-									//TO DO make stop button is pressed
+								avgtime/=iteration;
+								avgtime/=1000000;
+								if(k%2==0) {
+									board[AI[0]][AI[1]]='W';
+									movinglist.add (new Moves( AI[0], AI[1], k, "WHITE")) ;
 								}
+								else if(k<=224){
+									board[AI[0]][AI[1]]='B';
+									movinglist.add (new Moves( AI[0], AI[1], k, "BLACK")) ;
+								}
+								else {
+									board[AI[0]][AI[1]]='B';
+									movinglist.add (new Moves( AI[0], AI[1], k, "BLACK")) ;
+								}
+								if(k>=5) {
+									Candidate= backend.SortedCandidate(movinglist,board);
+								}
+								five.clear();
+								endCheck();
+								BoardPanel.revalidate();
+								BoardPanel.repaint();
+								labelindex(movinglist);
+								if(five.size()!=0||k==225) {
+									gameend=true;
+								} 
+							}
+							k++;
+							if(AT1animation) {flag=false;}
+							else {flag=true;}
+						}
+						simuApply=true;
+					}
+				}
 			}
 		};
 		btnsimulate.addActionListener(FkU);
 		btnsimulate.setBackground(new Color(255,215,0));
-		btnsimulate.setBounds(935, 470, 97, 25);
+		btnsimulate.setBounds(925, 470, 97, 25);
 		frame.getContentPane().add(btnsimulate);
 		frame.setLocationRelativeTo(null);
-
 
 		BoardPanel.setBounds(41, 20, 589,589);
 		BoardPanel.setBackground(new Color(0,250,154));
@@ -578,12 +624,12 @@ public class Gomoku_GUI {
 									else if(AIversion.equals("Minimax")) {
 										AI=backend.Minimax(board,k,movinglist,depth,true);}
 									else {
-										AI=backend.MyAI(board,k,movinglist,Mydepth,true);
-									}
+										AI=backend.MyAI(board,k,movinglist,Mydepth,true);}
 									endtime = System.nanoTime();
 									avgtime+=(endtime-starttime);
 								}
 								avgtime/=iteration;
+								avgtime/=1000000;
 								if(k%2==0) {
 									board[AI[0]][AI[1]]='W';
 									movinglist.add (new Moves( AI[0], AI[1], k, "WHITE")) ;
@@ -644,13 +690,17 @@ public class Gomoku_GUI {
 				Analysis1.append("\nWhite side board state and value:");
 				Analysis1.append(evaluresultW.ToString());
 
+				Analysis.append("Sorted possible next moves:\n");
 				for(int i=0;i<Candidate.size();i++) {
 					Analysis.append(Candidate.get(i).PercentageToString());
 				}
 
-				//				ArrayList<Moves> bestpath=backend.BestPath();
-				//				Analysis.append(bestpath.toString());
+				if(AIversion.equals("MyAI")) {
+					Analysis.append("\nNumber of new algo calculation: "+backend.myaiiteration);}
+				if(AIversion.equals("Minimax")) {
+					Analysis.append("\n\nNumber of minimax algo calculation: "+backend.minimaxiteration);}
 
+				Analysis.append("\n\nBest Path: "+backend.bestpath.toString());
 			}
 		});
 
@@ -800,52 +850,12 @@ public class Gomoku_GUI {
 			}
 		});
 		btnUndo.setBackground(new Color(255,99,71));
-		btnUndo.setBounds(794, 470, 97, 25);
+		btnUndo.setBounds(784, 470, 97, 25);
 		frame.getContentPane().add(btnUndo);
 
-		JButton btnNewGame = new JButton("New Game");
-		btnNewGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
 
-				TM1.stop();
-				TM.stop();
-				AT1animation=false;
-				AIboolean=false;
-				Analysis.setForeground(Color.BLACK);
-				Analysis.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
-				k=1;
-				simuApply=false;
-				gameend=false;
-				five.clear();
-				BoardPanel.removeAll();
-				movinglist.removeAll(movinglist);
-				num1.removeAll();
-				num.removeAll();
-				for(int i=0;i<15;i++) {
-					for(int j=0;j<15;j++) {
-						board[i][j]='-';
-					}
-				}
-				BoardPanel.revalidate();
-				BoardPanel.repaint();
-				Analysis.setText("New game started !!\n\n");
-				if(pvp) {Analysis.append("Mode is: PvP.\nClick 'PVP' button to switch PvAI mode");}
-				else {Analysis.append("Mode is: PvAI.\nClick 'PVP' button to switch PvP mode");}
-				Analysis1.setText("Board evaluator information will be shown there: \n\n");
-				String switch1 = null;
-				if(evaluator) {switch1="ON";Analysis1.setForeground(Color.BLACK);}
-				else {switch1="OFF";Analysis1.setForeground(Color.RED);}
-				Analysis1.append("Evaluator is : "+switch1+"\n");
-				if(Animation) {
-					Analysis1.append("Animation is : ON");}
-				else {Analysis1.append("Animation is : OFF");}
-			}
-		});
-		btnNewGame.setBackground(new Color(0,255,0));
-		btnNewGame.setBounds(668, 470, 97, 25);
-		frame.getContentPane().add(btnNewGame);
 
-		JButton AIversion1 = new JButton("Greedy AI");
+		JButton AIversion1 = new JButton("Greedy");
 		AIversion1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AIversion="Greedy";
@@ -853,10 +863,10 @@ public class Gomoku_GUI {
 			}
 		});
 		AIversion1.setBackground(new Color(255,153,255));
-		AIversion1.setBounds(1075, 470, 97, 25);
+		AIversion1.setBounds(1065, 470, 99, 25);
 		frame.getContentPane().add(AIversion1);
 
-		JButton AIversion2 = new JButton("Minimax AI");
+		JButton AIversion2 = new JButton("Minimax");
 		AIversion2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AIversion="Minimax";
@@ -864,10 +874,10 @@ public class Gomoku_GUI {
 			}
 		});
 		AIversion2.setBackground(new Color(255,153,255));
-		AIversion2.setBounds(1075, 524, 97, 25);
+		AIversion2.setBounds(1065, 524, 99, 25);
 		frame.getContentPane().add(AIversion2);
 
-		JButton AIversion3 = new JButton("My AI");
+		JButton AIversion3 = new JButton("New Algo");
 		AIversion3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AIversion="MyAI";
@@ -875,7 +885,7 @@ public class Gomoku_GUI {
 			}
 		});
 		AIversion3.setBackground(new Color(255,153,255));
-		AIversion3.setBounds(1075, 578, 97, 25);
+		AIversion3.setBounds(1065, 578, 99, 25);
 		frame.getContentPane().add(AIversion3);
 
 		JButton btnnext = new JButton("Next Move");
@@ -930,22 +940,21 @@ public class Gomoku_GUI {
 							if(AIversion.equals("Greedy")) {
 								AI=backend.Greedy(board,k,movinglist);}
 							else if(AIversion.equals("Minimax")) {
-								AI=backend.Minimax(board,k,movinglist,depth,true);}
+								AI=backend.Minimax(board,k,movinglist,depth,true);
+								Analysis.append("\n\nNumber of minimax algo calculation: "+backend.minimaxiteration);}
 							else {
 								AI=backend.MyAI(board,k,movinglist,Mydepth,true);
+								Analysis.append("\n\nNumber of new alog calculation: "+backend.myaiiteration);
 							}
 							endtime = System.nanoTime();
 							avgtime+=(endtime-starttime);
 						}
 						avgtime/=iteration;
+						avgtime/=1000000;
 						if(k%2==0) {
 							board[AI[0]][AI[1]]='W';
 							movinglist.add (new Moves( AI[0], AI[1], k, "WHITE")) ;
 						}
-						//						else if(k<=224){
-						//							board[AI1[0]][AI1[1]]='B';
-						//							movinglist.add (new Moves( AI1[0], AI1[1], k, "BLACK")) ;
-						//						}
 						else {
 							board[AI[0]][AI[1]]='B';
 							movinglist.add (new Moves( AI[0], AI[1], k, "BLACK")) ;
@@ -969,11 +978,12 @@ public class Gomoku_GUI {
 				evaluresultW= backend.evaluator(board, movinglist,2);
 				Analysis1.append("\nWhite side board state and value:");
 				Analysis1.append(evaluresultW.ToString());
+
 			}
 
 		});
 		btnnext.setBackground(new Color(255,215,0));
-		btnnext.setBounds(935, 524, 97, 25);
+		btnnext.setBounds(925, 524, 97, 25);
 		frame.getContentPane().add(btnnext);
 		frame.setLocationRelativeTo(null);
 
@@ -1016,7 +1026,7 @@ public class Gomoku_GUI {
 			}
 		});
 		btnSaveBoard.setBackground(new Color(135,206,250));
-		btnSaveBoard.setBounds(1200, 524, 97, 25);
+		btnSaveBoard.setBounds(1190, 524, 97, 25);
 		frame.getContentPane().add(btnSaveBoard);
 
 		JButton btnInput = new JButton("INPUT FILE");
@@ -1078,7 +1088,7 @@ public class Gomoku_GUI {
 			}
 		});
 		btnInput.setBackground(new Color(135,206,250));
-		btnInput.setBounds(1200, 470, 97, 25);
+		btnInput.setBounds(1190, 470, 97, 25);
 		frame.getContentPane().add(btnInput);
 
 		JButton btnPvP = new JButton("P v P");
@@ -1093,7 +1103,7 @@ public class Gomoku_GUI {
 					modelabel=new JLabel("->                   <-");
 					modelabel.setForeground(Color.RED);
 					modelabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 15));
-					modelabel.setBounds(654 , 521, 150, 35);
+					modelabel.setBounds(644 , 521, 150, 35);
 					frame.getContentPane().add(modelabel);	
 				}
 				else {
@@ -1102,7 +1112,7 @@ public class Gomoku_GUI {
 			}
 		});
 		btnPvP.setBackground(new Color(0,255,0));
-		btnPvP.setBounds(668, 524, 97, 25);
+		btnPvP.setBounds(658, 524, 97, 25);
 		frame.getContentPane().add(btnPvP);
 
 		JButton btnPvA = new JButton("P v AI");
@@ -1114,12 +1124,10 @@ public class Gomoku_GUI {
 				AIboolean=false;
 				if(pvp) {
 					pvp=false;
-
 					if(k<5) {
 						OpeningBook ob = new OpeningBook();
 						isOpening=true;
 						OpeningAry=ob.Opeing(movinglist,k);
-
 					}
 					else {
 						isOpening=false;
@@ -1138,21 +1146,18 @@ public class Gomoku_GUI {
 					modelabel=new JLabel("->                   <-");
 					modelabel.setForeground(Color.RED);
 					modelabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 15));
-					modelabel.setBounds(654 , 575, 150, 35);
+					modelabel.setBounds(644 , 575, 150, 35);
 					frame.getContentPane().add(modelabel);	
 				}
 				else {
-
 					if(k<5) {
 						OpeningBook ob = new OpeningBook();
 						isOpening=true;
 						OpeningAry=ob.Opeing(movinglist,k);
-
 					}
 					else {
 						isOpening=false;
 					}
-
 
 					Analysis1.setText("Board evaluator information will be shown there: \n\nEvaluator is on by default.\nAnimation is on by default.\n\nYou can turn it off by pressing 'Evaluator' button\n\n");
 					TM.stop();
@@ -1165,7 +1170,7 @@ public class Gomoku_GUI {
 			}
 		});
 		btnPvA.setBackground(new Color(0,255,0));
-		btnPvA.setBounds(668, 578, 97, 25);
+		btnPvA.setBounds(658, 578, 97, 25);
 		frame.getContentPane().add(btnPvA);
 
 		JButton btnEvaluate = new JButton("Evaluator");
@@ -1206,7 +1211,7 @@ public class Gomoku_GUI {
 					evaluatorlabel=new JLabel("OFF");
 					evaluatorlabel.setForeground(Color.RED);
 					evaluatorlabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 20));
-					evaluatorlabel.setBounds(1032, 575, 40, 35);
+					evaluatorlabel.setBounds(1022, 575, 40, 35);
 					frame.getContentPane().add(evaluatorlabel);
 					Analysis1.setForeground(Color.RED);
 					Analysis1.setText("Evaluator is OFF!!\n\nClick 'Evaluator' button to reopen!!\n");
@@ -1215,24 +1220,8 @@ public class Gomoku_GUI {
 			}
 		});
 		btnEvaluate.setBackground(new Color(255,215,0));
-		btnEvaluate.setBounds(935, 578, 97, 25);
+		btnEvaluate.setBounds(925, 578, 97, 25);
 		frame.getContentPane().add(btnEvaluate);
-
-		JButton btnstop = new JButton("STOP");
-		btnstop.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				AIboolean=false;
-				TM.stop();
-				TM1.stop();
-				AT1animation=false;
-				Analysis1.setForeground(Color.RED);
-				Analysis1.setText("The AIV1 mode stopped!!\nClick 'AI V1' to simulate the rest.");
-
-			}
-		});
-		btnstop.setBackground(new Color(255,99,71));
-		btnstop.setBounds(794, 524, 97, 25);
-		frame.getContentPane().add(btnstop);
 
 		JButton btnani = new JButton("Animation");
 		btnani.addActionListener(new ActionListener() {
@@ -1246,7 +1235,7 @@ public class Gomoku_GUI {
 				animationlabel=new JLabel("OFF");
 				animationlabel.setForeground(Color.RED);
 				animationlabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 20));
-				animationlabel.setBounds(891, 575, 40, 35);
+				animationlabel.setBounds(881, 575, 40, 35);
 				frame.getContentPane().add(animationlabel);
 				}
 				else {Animation=true;
@@ -1258,13 +1247,13 @@ public class Gomoku_GUI {
 				animationlabel=new JLabel("ON");
 				animationlabel.setForeground(Color.BLACK);
 				animationlabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 20));
-				animationlabel.setBounds(891, 575, 40, 35);
+				animationlabel.setBounds(881, 575, 40, 35);
 				frame.getContentPane().add(animationlabel);
 				}
 			}
 		});
 		btnani.setBackground(new Color(255,99,71));
-		btnani.setBounds(794, 578, 97, 25);
+		btnani.setBounds(784, 578, 97, 25);
 		frame.getContentPane().add(btnani);
 
 		JButton btnHelp = new JButton("HELP");
@@ -1299,8 +1288,10 @@ public class Gomoku_GUI {
 			}
 		});
 		btnHelp.setBackground(new Color(135,206,250));
-		btnHelp.setBounds(1200,  578, 97, 25);
+		btnHelp.setBounds(1190,  578, 97, 25);
 		frame.getContentPane().add(btnHelp);
+
+
 	}
 
 	public void endCheck(){
@@ -1438,9 +1429,7 @@ public class Gomoku_GUI {
 		Analysis.setForeground(Color.BLACK);
 		Analysis.setText("Time comsuming:\n");
 		Analysis.setForeground(Color.BLACK);
-		Analysis.append("AI calculation start time(ns):  "+starttime+"\n");
-		Analysis.append("AI calculation end time(ns):  "+endtime+"\n");
-		Analysis.append("Average time: " + avgtime + " ("+iteration+" iteration)\n\n");
+		Analysis.append("Average time: " + avgtime +"ms"+ " ("+iteration+" iteration)\n\n");
 		String a = "Time comsuming:";
 		int p0 = a.indexOf("Time comsuming:");
 		int p1 = p0 + "Time comsuming:".length();

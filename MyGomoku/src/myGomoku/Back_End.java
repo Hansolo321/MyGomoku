@@ -2,10 +2,10 @@ package myGomoku;
 /*
  * Author: Han Liao (lhan@iastate.edu or leslieileo@gmail.com)
  * This is the project for creative component in ISU
+ * This class include all back end algorithm and board evaluator
  */
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class Back_End {
 	public ArrayList<Moves> five=new ArrayList<Moves>();
@@ -16,7 +16,9 @@ public class Back_End {
 	private boolean depth0=false;
 	private int alpha=-1000000;
 	private int beta = 1000000;
-	private ArrayList<Moves> bestpath;
+	public ArrayList<Moves> bestpath;
+	public int minimaxiteration=0;
+	public int myaiiteration=0;
 
 	public int[] stoneposition(int mouseX, int mouseY) {
 		double close=100;
@@ -121,7 +123,6 @@ public class Back_End {
 
 	public  int[] MAX(char[][] board, int key, ArrayList<Moves> movinglist) {
 		int[] result=new int[] {0,0};
-
 		if(key<=225&&key%2==0) {
 			int i=scaled[0];
 			int j=scaled[1];
@@ -173,6 +174,7 @@ public class Back_End {
 
 	public  int[] Minimax(char[][] board, int key, ArrayList<Moves> movinglist,int depth,boolean maxplayer) {
 		int[] result=new int[] {0,0};
+		minimaxiteration=0;
 		if(key%2==0) {
 			result= MinimaxWhite(board, key,  movinglist,depth,alpha,beta,maxplayer);
 		}
@@ -183,6 +185,7 @@ public class Back_End {
 	}
 
 	public  int[] MinimaxWhite(char[][] board, int key, ArrayList<Moves> movinglist,int depth,int alpha, int beta, boolean maxplayer) {
+		minimaxiteration++;
 		int[] result=new int[] {0,0};
 		depth0=false;
 		if(depth==0) {
@@ -281,6 +284,7 @@ public class Back_End {
 	}
 
 	public  int[] MinimaxBlack(char[][] board, int key, ArrayList<Moves> movinglist,int depth,int alpha, int beta, boolean maxplayer) {
+		minimaxiteration++;
 		int[] result=new int[] {0,0};
 		depth0=false;
 		if(depth==0) {
@@ -383,13 +387,14 @@ public class Back_End {
 		boolean whitemoves = false;
 		if(key%2==0) {whitemoves=true;}
 		else {whitemoves=false;}
-		//if(!bestpath.isEmpty())
-		//bestpath=new ArrayList<Moves>();
+		myaiiteration=0;
+		bestpath=new ArrayList<Moves>();
 		result= Myalgo(board, key,  movinglist,depth,alpha,beta,maxplayer,whitemoves);
 		return result;
 	}
 
 	public  int[] Myalgo(char[][] board, int key, ArrayList<Moves> movinglist,int depth,int alpha, int beta, boolean maxplayer, boolean whitemoves) {
+		myaiiteration++;
 		int[] result=new int[] {0,0};
 		depth0=false;
 		if(depth==0) {
@@ -521,7 +526,6 @@ public class Back_End {
 
 	public ArrayList<Moves> SortedCandidate(ArrayList<Moves> movinglist,char[][] board) {
 		ArrayList<Moves> result = new ArrayList<Moves>();
-
 		for(int i=0;i<movinglist.size();i++)
 		{
 			int x=movinglist.get(i).getX();
@@ -570,10 +574,8 @@ public class Back_End {
 			//up-down
 			char target1 ='-';
 			int count1=0;
-			int value1=0;
 			char target2 ='-';
 			int count2=0;
-			int value2=0;
 			int value=0;
 			int maxvalue=0;
 			for(int j=Math.max(0, y-1);j>=Math.max(0, y-4);j--) {
@@ -618,10 +620,8 @@ public class Back_End {
 			//left-right
 			target1 ='-';
 			count1=0;
-			value1=0;
 			target2 ='-';
 			count2=0;
-			value2=0;
 			value=0;
 			for(int j=Math.max(0, x-1);j>=Math.max(0, x-4);j--) {
 				if(board[j][y]=='-') {break;}
@@ -662,10 +662,8 @@ public class Back_End {
 			//leftup-rightdown
 			target1 ='-';
 			count1=0;
-			value1=0;
 			target2 ='-';
 			count2=0;
-			value2=0;
 			value=0;
 			int p=x-1;int q=y-1;
 			while(p>=0&&q>=0) {
@@ -710,10 +708,8 @@ public class Back_End {
 			//rightup-leftdown
 			target1 ='-';
 			count1=0;
-			value1=0;
 			target2 ='-';
 			count2=0;
-			value2=0;
 			value=0;
 			p=x+1; q=y-1;
 			while(p<=14&&q>=0) {
@@ -1154,8 +1150,6 @@ public class Back_End {
 			else{index=index+2;}
 		}
 
-
-
 		//////////////////////////////////
 		if(movinglist.size()<2) {
 			return bs;
@@ -1500,8 +1494,8 @@ public class Back_End {
 
 	}
 
-	public ArrayList<Moves> BestPath(){
-		bestpath.add(new Moves(1,1));
-		return bestpath;
-	}
+//	public ArrayList<Moves> BestPath(){
+//		bestpath.add(new Moves(1,1));
+//		return bestpath;
+//	}
 }
