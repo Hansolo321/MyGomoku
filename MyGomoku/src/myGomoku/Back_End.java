@@ -16,7 +16,7 @@ public class Back_End {
 	private boolean depth0=false;
 	private int alpha=-1000000;
 	private int beta = 1000000;
-	public ArrayList<Moves> bestpath;
+	public ArrayList<Moves> bestpath=new ArrayList<Moves>();
 	public int minimaxiteration=0;
 	public int myaiiteration=0;
 
@@ -1483,6 +1483,7 @@ public class Back_End {
 		//Dead Four
 		if(count==4&&cut1>=1&&cut2==0&&block2==true&&cut3==0&&cut4==0){bs.Deadfour().add(moves);}
 		if(count==4&&cut1==0&&cut2>=1&&block1==true&&cut3==0&&cut4==0){bs.Deadfour().add(moves);}
+		if(count==4&&block1==true&&block2==true&&cut3==0&&cut4==0){bs.JDeadfour().add(moves);}
 
 		if(count==4&&cut1>=0&&cut2==1&&cut3==0&&cut4==3&&dupli2<1){bs.JDeadfour().add(moves);}
 		if(count==4&&cut1>=1&&cut2>=0&&cut3==3&&cut4==0&&dupli<1){bs.JDeadfour().add(moves);}
