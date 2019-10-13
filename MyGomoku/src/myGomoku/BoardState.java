@@ -14,6 +14,7 @@ public class BoardState {
 	private List<ArrayList<Moves>> Livefour;
 	private List<ArrayList<Moves>> Deadfour;
 	private List<ArrayList<Moves>> JDeadfour;
+	private List<ArrayList<Moves>> CDeadfour;
 	private List<ArrayList<Moves>> Livethree;
 	private List<ArrayList<Moves>> JLivethree;
 	private List<ArrayList<Moves>> Deadthree;
@@ -27,6 +28,7 @@ public class BoardState {
 		this.Livefour = new ArrayList<ArrayList<Moves>>();
 		this.Deadfour = new ArrayList<ArrayList<Moves>>();
 		this.JDeadfour = new ArrayList<ArrayList<Moves>>();
+		this.CDeadfour = new ArrayList<ArrayList<Moves>>();
 		this.Livethree = new ArrayList<ArrayList<Moves>>();
 		this.JLivethree = new ArrayList<ArrayList<Moves>>();
 		this.Deadthree = new ArrayList<ArrayList<Moves>>();
@@ -55,6 +57,10 @@ public class BoardState {
 	
 	public List<ArrayList<Moves>> JDeadfour() {
 		return JDeadfour;
+	}
+	
+	public List<ArrayList<Moves>> CDeadfour() {
+		return CDeadfour;
 	}
 	
 	public List<ArrayList<Moves>> Livethree() {
@@ -86,10 +92,11 @@ public class BoardState {
 		if(Deadthree.size()==1&&((Livethree.size()==1)||(JLivethree.size()==1))) {boardEval+=1000;}
 		if(Deadfour.size()!=0) {boardEval+=500;}
 		if(JDeadfour.size()!=0) {boardEval+=300;}
+		if(CDeadfour.size()!=0) {boardEval+=CDeadfour.size()*100;}
 		if(Livethree.size()!=0) {boardEval+=100;}
 		if(JLivethree.size()!=0) {boardEval+=90;}
-		if(Livetwo.size()==2) {boardEval+=50;}
 		if(Deadthree.size()!=0) {boardEval+=5*Deadthree.size();}
+		if(Livetwo.size()==2) {boardEval+=Livetwo.size()*5;}
 		if(Livetwo.size()!=0) {boardEval+=3;}
 		if(Deadtwo.size()!=0) {boardEval+=2*Deadtwo.size();}
 		else {boardEval+=1;}
@@ -131,6 +138,15 @@ public class BoardState {
 				result+=JDeadfour.get(i).get(j).toString();
 			}
 			if(i<JDeadfour.get(i).size()) {
+				result+="\n";}
+		}
+		
+		result+="\nCDead Four: \n";
+		for(int i=0;i<CDeadfour.size();i++) {
+			for(int j=0;j<CDeadfour.get(i).size();j++) {
+				result+=CDeadfour.get(i).get(j).toString();
+			}
+			if(i<CDeadfour.get(i).size()) {
 				result+="\n";}
 		}
 		

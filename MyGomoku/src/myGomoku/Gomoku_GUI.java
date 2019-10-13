@@ -2,6 +2,7 @@ package myGomoku;
 /*
  * Author: Han Liao (lhan@iastate.edu or leslieileo@gmail.com)
  * This is the project for creative component in ISU
+ * java command line arguments parser
  */
 
 import java.awt.Color;
@@ -75,7 +76,7 @@ public class Gomoku_GUI {
 	private boolean isOpening=false;
 	private boolean OpeningFlag=true;
 	private boolean AIboolean=false;
-	private int Delay=10;
+	private int Delay=1;
 	private BoardState evaluresultB;
 	private BoardState evaluresultW;
 	private String AIversion="Greedy";
@@ -143,10 +144,10 @@ public class Gomoku_GUI {
 		if(pvp) {
 			damn=521;
 		}
-		modelabel=new JLabel("->                   <-");
+		modelabel=new JLabel(">>                   <<");
 		modelabel.setForeground(Color.RED);
 		modelabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 15));
-		modelabel.setBounds(644 , damn, 150, 35);
+		modelabel.setBounds(641 , damn, 150, 35);
 		frame.getContentPane().add(modelabel);
 
 		BoardPanel = new JPanel() {
@@ -295,7 +296,7 @@ public class Gomoku_GUI {
 				TM1.stop();
 				AT1animation=false;
 				Analysis1.setForeground(Color.RED);
-				Analysis1.setText("The AIV1 mode stopped!!\nClick 'AI V1' to simulate the rest.");
+				Analysis1.setText("The simulation stopped!!\nClick 'Simulate' to simulate the rest.");
 
 			}
 		});
@@ -330,7 +331,8 @@ public class Gomoku_GUI {
 				BoardPanel.repaint();
 				Analysis.setText("New game started !!\n\n");
 				if(pvp) {Analysis.append("Mode is: PvP.\nClick 'PVP' button to switch PvAI mode");}
-				else {Analysis.append("Mode is: PvAI.\nClick 'PVP' button to switch PvP mode");}
+				else {Analysis.append("Mode is: PvAI.\n"+"Algorithm: "+AIversion+"\nClick 'PVP' button to switch PvP mode");
+				}
 				Analysis1.setText("Board evaluator information will be shown there: \n\n");
 				String switch1 = null;
 				if(evaluator) {switch1="ON";Analysis1.setForeground(Color.BLACK);}
@@ -387,8 +389,8 @@ public class Gomoku_GUI {
 						TM.setRepeats(false);}
 					if(gameend) {
 						btnstop.doClick();
-						simuApply=false;
 						TM.stop();
+						simuApply=false;
 						AT1animation=false;
 						BoardPanel.repaint();
 						Analysis1.setForeground(Color.RED);
@@ -487,6 +489,8 @@ public class Gomoku_GUI {
 								}
 								avgtime/=iteration;
 								avgtime/=1000000;
+								Analysis1.append("\n\nAverate time consuming for last move:"+avgtime);
+
 								if(k%2==0) {
 									board[AI[0]][AI[1]]='W';
 									movinglist.add (new Moves( AI[0], AI[1], k, "WHITE")) ;
@@ -518,6 +522,7 @@ public class Gomoku_GUI {
 						simuApply=true;
 					}
 				}
+				Analysis1.setCaretPosition(0);
 			}
 		};
 		btnsimulate.addActionListener(FkU);
@@ -640,18 +645,35 @@ public class Gomoku_GUI {
 									k++;}
 							}
 						}
-
+						if(Animation) {
+							evaluatorrange=backend.scale(movinglist);
+							Analysis1.setForeground(Color.BLACK);
+							Analysis1.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
+							Analysis1.setText("Animatoin is On!!\n");
+						}
+						else {
+							Analysis1.setForeground(Color.BLACK);
+							Analysis1.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
+							Analysis1.setText("Animation is OFF!!\n");
+						}
 						if(evaluator) {
 							evaluatorrange=backend.scale(movinglist);
 							Analysis1.setForeground(Color.BLACK);
 							Analysis1.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
-							Analysis1.setText("Evaluator is ON!!\nEvaluate range is:\n"+evaluatorrange[0]+" < x < "+evaluatorrange[2]+"\n"+evaluatorrange[1]+" < y < "+evaluatorrange[3]+"\n");
+							Analysis1.append("Evaluator is On!!\nEvaluate range is:\n"+evaluatorrange[0]+" < x < "+evaluatorrange[2]+"\n"+evaluatorrange[1]+" < y < "+evaluatorrange[3]+"\n");
 							if(k<5) {Analysis1.append("Opening book is processing!!");}
+							evaluresultB= backend.evaluator(board, movinglist,1);
+							Analysis1.append("\nBlack side board state and value:");
+							Analysis1.append(evaluresultB.ToString());
+
+							evaluresultW= backend.evaluator(board, movinglist,2);
+							Analysis1.append("\nWhite side board state and value:");
+							Analysis1.append(evaluresultW.ToString());
 						}
 						else {
 							Analysis1.setForeground(Color.RED);
 							Analysis1.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
-							Analysis1.setText("Evaluator is OFF!!\n\nClick 'Evaluator' button to turn it on!!\n\n");
+							Analysis1.append("Evaluator is OFF!!\n\nClick 'Evaluator' button to turn it on!!\n\n");
 							if(k<5) {Analysis1.append("Opening book is processing!!");}
 						}
 						if(k>=5) {
@@ -682,25 +704,30 @@ public class Gomoku_GUI {
 					Analysis.setFont(new Font("Mongolian Baiti", Font.BOLD, 18));
 					Analysis.setText("\n\n\n\n\n\n\n\n    The Moving request is cancled!!!");
 				}
-				evaluresultB= backend.evaluator(board, movinglist,1);
-				Analysis1.append("\nBlack side board state and value:");
-				Analysis1.append(evaluresultB.ToString());
+				if(!pvp) {
+					if(!gameend) {
+						Analysis.append("\nSorted possible next moves:\n");
+						for(int i=0;i<Candidate.size();i++) {
+							Analysis.append(Candidate.get(i).PercentageToString());
+						}
+					}
+					if(AIversion.equals("MyAI")) {
+						Analysis.append("\n\nNumber of new algo calculation: "+backend.myaiiteration);}
+					else if(AIversion.equals("Minimax")) {
+						Analysis.append("\n\nNumber of minimax algo calculation: "+backend.minimaxiteration);}
+					Analysis.append("\n\nBest Path: "+backend.bestpath.toString());
+					Analysis.append("\n\nAverage time: " + avgtime +"ms"+ " ("+iteration+" iteration)");
+				}
+				Analysis1.setCaretPosition(0);
+				//////////////////////////////////////TEST AREA//////////////////////////////////////
 
-				evaluresultW= backend.evaluator(board, movinglist,2);
-				Analysis1.append("\nWhite side board state and value:");
-				Analysis1.append(evaluresultW.ToString());
-
-				Analysis.append("Sorted possible next moves:\n");
+				Analysis.append("\nSorted possible next moves:\n");
 				for(int i=0;i<Candidate.size();i++) {
 					Analysis.append(Candidate.get(i).PercentageToString());
 				}
-
-				if(AIversion.equals("MyAI")) {
-					Analysis.append("\nNumber of new algo calculation: "+backend.myaiiteration);}
-				if(AIversion.equals("Minimax")) {
-					Analysis.append("\n\nNumber of minimax algo calculation: "+backend.minimaxiteration);}
-
-				Analysis.append("\n\nBest Path: "+backend.bestpath.toString());
+	
+			
+				//////////////////////////////////////TEST AREA//////////////////////////////////////
 			}
 		});
 
@@ -778,6 +805,9 @@ public class Gomoku_GUI {
 						board[x][y]='-';
 						movinglist.remove(movinglist.size()-1);
 					}	
+					if(k>=5) {
+						Candidate= backend.SortedCandidate(movinglist,board);
+					}
 
 					BoardPanel.revalidate();
 					BoardPanel.repaint();
@@ -817,6 +847,13 @@ public class Gomoku_GUI {
 					Analysis1.setForeground(Color.BLACK);
 					Analysis1.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
 					Analysis1.append("Evaluator is On!!\nEvaluate range is:\n"+evaluatorrange[0]+" < x < "+evaluatorrange[2]+"\n"+evaluatorrange[1]+" < y < "+evaluatorrange[3]+"\n");
+					evaluresultB= backend.evaluator(board, movinglist,1);
+					Analysis1.append("\nBlack side board state and value:");
+					Analysis1.append(evaluresultB.ToString());
+
+					evaluresultW= backend.evaluator(board, movinglist,2);
+					Analysis1.append("\nWhite side board state and value:");
+					Analysis1.append(evaluresultW.ToString());
 				}
 				else if(evaluator&&movinglist.size()==0) {
 					Analysis1.setForeground(Color.BLACK);
@@ -845,8 +882,17 @@ public class Gomoku_GUI {
 					TM1.stop();
 					AT1animation=false;
 					Analysis1.setText("Board evaluator information will be shown there: \n\nEvaluator is on by default.\nAnimation is on by default.\n\nYou can turn it off by pressing 'Evaluator' button\n\n");
+					evaluresultB= backend.evaluator(board, movinglist,1);
+					Analysis1.append("\nBlack side board state and value:");
+					Analysis1.append(evaluresultB.ToString());
+
+					evaluresultW= backend.evaluator(board, movinglist,2);
+					Analysis1.append("\nWhite side board state and value:");
+					Analysis1.append(evaluresultW.ToString());
 					BoardPanel.revalidate();
-					BoardPanel.repaint();	}
+					BoardPanel.repaint();
+				}
+				Analysis1.setCaretPosition(0);	
 			}
 		});
 		btnUndo.setBackground(new Color(255,99,71));
@@ -941,10 +987,9 @@ public class Gomoku_GUI {
 								AI=backend.Greedy(board,k,movinglist);}
 							else if(AIversion.equals("Minimax")) {
 								AI=backend.Minimax(board,k,movinglist,depth,true);
-								Analysis.append("\n\nNumber of minimax algo calculation: "+backend.minimaxiteration);}
+								}
 							else {
 								AI=backend.MyAI(board,k,movinglist,Mydepth,true);
-								Analysis.append("\n\nNumber of new alog calculation: "+backend.myaiiteration);
 							}
 							endtime = System.nanoTime();
 							avgtime+=(endtime-starttime);
@@ -961,6 +1006,12 @@ public class Gomoku_GUI {
 						}
 						five.clear();
 						endCheck();
+						if(AIversion.equals("Minimax")) {
+							Analysis.append("\n\nNumber of minimax algo calculation: "+backend.minimaxiteration);}
+						else if(AIversion.equals("MyAI")){
+							Analysis.append("\n\nNumber of new alog calculation: "+backend.myaiiteration);
+						}
+						
 						BoardPanel.revalidate();
 						BoardPanel.repaint();
 
@@ -1094,20 +1145,27 @@ public class Gomoku_GUI {
 		JButton btnPvP = new JButton("P v P");
 		btnPvP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Analysis.setForeground(Color.BLACK);
+				Analysis.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
+				Analysis1.setForeground(Color.BLACK);
+				Analysis1.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
 				if(!pvp) {
 					pvp=true;
 					Analysis.setText("You swtiched to PvP mode.");
 					modelabel.remove(modelabel);
 					frame.getContentPane().remove(modelabel);
 					frame.getContentPane().repaint();
-					modelabel=new JLabel("->                   <-");
+					modelabel=new JLabel(">>                   <<");
 					modelabel.setForeground(Color.RED);
 					modelabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 15));
-					modelabel.setBounds(644 , 521, 150, 35);
+					modelabel.setBounds(641 , 521, 150, 35);
 					frame.getContentPane().add(modelabel);	
 				}
 				else {
 					Analysis.setText("Already in PvP mode.");
+				}
+				if(k>=5) {
+					Candidate= backend.SortedCandidate(movinglist,board);
 				}
 			}
 		});
@@ -1118,6 +1176,10 @@ public class Gomoku_GUI {
 		JButton btnPvA = new JButton("P v AI");
 		btnPvA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Analysis.setForeground(Color.BLACK);
+				Analysis.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
+				Analysis1.setForeground(Color.BLACK);
+				Analysis1.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
 				TM.stop();
 				TM1.stop();
 				AT1animation=false;
@@ -1143,10 +1205,10 @@ public class Gomoku_GUI {
 					modelabel.remove(modelabel);
 					frame.getContentPane().remove(modelabel);
 					frame.getContentPane().repaint();
-					modelabel=new JLabel("->                   <-");
+					modelabel=new JLabel(">>                   <<");
 					modelabel.setForeground(Color.RED);
 					modelabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 15));
-					modelabel.setBounds(644 , 575, 150, 35);
+					modelabel.setBounds(641 , 575, 150, 35);
 					frame.getContentPane().add(modelabel);	
 				}
 				else {
@@ -1167,6 +1229,9 @@ public class Gomoku_GUI {
 					BoardPanel.repaint();
 					Analysis.setText("Already in PvAI mode.\nCurrent Algorithm: "+AIversion);
 				}
+				if(k>=5) {
+					Candidate= backend.SortedCandidate(movinglist,board);
+				}
 			}
 		});
 		btnPvA.setBackground(new Color(0,255,0));
@@ -1176,11 +1241,22 @@ public class Gomoku_GUI {
 		JButton btnEvaluate = new JButton("Evaluator");
 		btnEvaluate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if(Animation) {
+					evaluatorrange=backend.scale(movinglist);
+					Analysis1.setForeground(Color.BLACK);
+					Analysis1.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
+					Analysis1.setText("Animatoin is On!!\n");
+				}
+				else {
+					Analysis1.setForeground(Color.BLACK);
+					Analysis1.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
+					Analysis1.setText("Animation is OFF!!\n");
+				}
 				if(!evaluator) {
 					evaluator=true;
 					Analysis1.setForeground(Color.BLACK);
 					Analysis.setFont(new Font("Mongolian Baiti", Font.BOLD, 16));
-					Analysis1.setText("Evaluator is ON!!\n\n");
+					Analysis1.append("Evaluator is ON!!\n");
 					evaluatorlabel.remove(evaluatorlabel);
 					frame.getContentPane().remove(evaluatorlabel);
 					frame.getContentPane().repaint();
@@ -1196,6 +1272,14 @@ public class Gomoku_GUI {
 						labelindex(movinglist);	
 						evaluatorrange=backend.scale(movinglist);
 						Analysis1.append("Evaluate range is:\n"+evaluatorrange[0]+" < x < "+evaluatorrange[2]+"\n"+evaluatorrange[1]+" < y < "+evaluatorrange[3]+"\n");
+						evaluresultB= backend.evaluator(board, movinglist,1);
+						Analysis1.append("\nBlack side board state and value:");
+						Analysis1.append(evaluresultB.ToString());
+
+						evaluresultW= backend.evaluator(board, movinglist,2);
+						Analysis1.append("\nWhite side board state and value:");
+						Analysis1.append(evaluresultW.ToString());
+						Analysis1.setCaretPosition(0);
 					}
 				}
 				else {
@@ -1267,16 +1351,16 @@ public class Gomoku_GUI {
 				Analysis.setText("\n\n\n\nIf you have any question and find any bug in this program, please feel free to contact me!\n\nAuthor: Han Liao\n\nEmail: lhan@iastate.edu");
 				Analysis1.setForeground(Color.BLUE);
 				Analysis1.setFont(new Font("Mongolian Baiti", Font.BOLD, 14));
-				Analysis1.setText("This program starts with the PvAI mode, the evalutor and animation is turned on by defaut.\n-----------------------------------------------\n-----------------------------------------------\n");
-				Analysis1.append("New Game\nClear all moves and board state. Keep the setting for evaluator, animation and mode.\n-----------------------------------------------\n");
+				Analysis1.setText("This program starts with the PvP mode, the evalutor and animation is turned on by defaut.\n-----------------------------------------------\n-----------------------------------------------\n");
+				Analysis1.append("New Game\nClear all moves and board state. Keep the setting for evaluator, animation, simulatoin algorithm and mode.\n-----------------------------------------------\n");
 				Analysis1.append("PVP\nSwitch to person versus person mode.If you already in this mode, no other aciton will be performed.\n-----------------------------------------------\n");
 				Analysis1.append("PVAI\nSwitch to person versus AI mode.If alredy in this mood,no other aciton will be performed\n-----------------------------------------------\n");
 				Analysis1.append("UNDO\nIf you are in the PvP mode, it will undo the previous one move.If you are in the PvAI mode, it will undo the previous two moves.\n-----------------------------------------------\n");
-				Analysis1.append("STOP'\nWill stop the AI calculation and show current board state. No other action performed.\n-----------------------------------------------\n");
-				Analysis1.append("AI V1\nAI wil control the board in current state until the game end. You can press 'STOP' to stop this processing.\n-----------------------------------------------\n");
-				Analysis1.append("AI V2\nAI will generate next move depend on current board state.\n-----------------------------------------------\n");
-				Analysis1.append("EVALUATOR\nIt will turn on the evaluator or turn it off.\n-----------------------------------------------\n");
-				Analysis1.append("ANIMATION\nIt will turn on the Animation or turn it off.\n-----------------------------------------------\n");
+				Analysis1.append("STOP\nWill stop the AI calculation and show current board state. No other action performed.\n-----------------------------------------------\n");
+				Analysis1.append("Simulate\nNew selection windown will show up. Selecte the AI algorithm need to test.AI wil control the board in current state until the game end. You can press 'STOP' to stop this processing.\n-----------------------------------------------\n");
+				Analysis1.append("Next Move\nAI will generate next move depend on current board state and AI algorithm.\n-----------------------------------------------\n");
+				Analysis1.append("EvaluatorR\nIt will turn on the evaluator or turn it off.\n-----------------------------------------------\n");
+				Analysis1.append("Animation\nIt will turn on the Animation or turn it off.\n-----------------------------------------------\n");
 				Analysis1.append("INPUT FILE\nRead the input file(.txt) from outside program. The file formatting has to be following:\n\nThere are 6 moves in this game.\n" + 
 						"Date: 2018/12/09 22:59:44\n" + 
 						"\n" + 
@@ -1285,13 +1369,12 @@ public class Gomoku_GUI {
 						"Move 02: [04,07] WHITE\n" + 
 						"\n-----------------------------------------------\n");
 				Analysis1.append("SAVE FILE\nSave the board state into current direcotry as 'Game.txt'. The formatting like above.\n\n");
+				Analysis1.setCaretPosition(0);
 			}
 		});
 		btnHelp.setBackground(new Color(135,206,250));
 		btnHelp.setBounds(1190,  578, 97, 25);
 		frame.getContentPane().add(btnHelp);
-
-
 	}
 
 	public void endCheck(){
@@ -1306,7 +1389,7 @@ public class Gomoku_GUI {
 				for(int i=0;i<movinglist.size();i++) {
 					Analysis.append(movinglist.get(i).ToString());
 				}	
-				Analysis.append("\n\nGAME OVER!!!\nWHITE SIDE WIN!!!\n\n");
+				Analysis.append("\nGAME OVER!!!\nWHITE SIDE WIN!!!\n");
 			}
 			else {
 				Analysis.setText("GAME OVER!!!\nBLACK SIDE WIN!!!\n\n");
@@ -1315,8 +1398,9 @@ public class Gomoku_GUI {
 				for(int i=0;i<movinglist.size();i++) {
 					Analysis.append(movinglist.get(i).ToString());
 				}
-				Analysis.append("\n\nGAME OVER!!!\nBLACK SIDE WIN!!!\n\n");
+				Analysis.append("\nGAME OVER!!!\nBLACK SIDE WIN!!!\n");
 			}
+			Candidate.clear();
 		}
 		else if(k==225){
 			Analysis.setForeground(Color.RED);
@@ -1334,7 +1418,7 @@ public class Gomoku_GUI {
 		for(int f=0;f<backend.five.size();f++) {
 			five.add(backend.five.get(f));
 		}
-
+		Analysis.setCaretPosition(0);
 	}
 
 	public void labelindex(ArrayList<Moves> movinglist) {
@@ -1440,14 +1524,15 @@ public class Gomoku_GUI {
 		}
 		if(pvp) {Analysis.append("Mode: PvP!\n");}
 		else {Analysis.append("Mode: PvAI. Algorithem: "+AIversion+"\n");}
-		Analysis.append("Board state:\n");
-		for(int c=0;c<15;c++) {
-			for(int r=0;r<15;r++) {
-				Analysis.append(String.valueOf(board[r][c])+"  ");
-				if(r==14) {
-					Analysis.append("\n");
-				}
-			}
-		}
+		//		Analysis.append("Board state:\n");
+		//		for(int c=0;c<15;c++) {
+		//			for(int r=0;r<15;r++) {
+		//				Analysis.append(String.valueOf(board[r][c])+"  ");
+		//				if(r==14) {
+		//					Analysis.append("\n");
+		//				}
+		//			}
+		//		}
+		Analysis.setCaretPosition(0);
 	}
 }

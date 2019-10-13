@@ -49,7 +49,6 @@ public class Simulator_Menu implements Runnable{
 		beam = new ImageIcon(this.getClass().getClassLoader().getResource("GomokuIcon.png"));
 		Image icon=beam.getImage();
 		frame.setIconImage(icon);
-		//frame.pack();
 		frame.setLocationRelativeTo(null);
 
 
@@ -58,8 +57,8 @@ public class Simulator_Menu implements Runnable{
 
 		frame.getContentPane().setBackground(new Color(255,250,240));
 		ImageIcon beam2=null;
-		//beam2 = new ImageIcon(this.getClass().getClassLoader().getResource("menu-background.jpg"));
-		beam2 = new ImageIcon(this.getClass().getClassLoader().getResource("Ocean.jpg"));
+		beam2 = new ImageIcon(this.getClass().getClassLoader().getResource("menu-background.jpg"));
+		//beam2 = new ImageIcon(this.getClass().getClassLoader().getResource("Ocean.jpg"));
 		Image icon2=beam2.getImage();
 		JLabel background = new JLabel(new ImageIcon(icon2));
 		frame.setContentPane(background);
@@ -238,6 +237,8 @@ public class Simulator_Menu implements Runnable{
 		Cancelbtn.setBackground(Color.RED);
 		Cancelbtn.setBounds(91, 202, 149, 33);
 		frame.getContentPane().add(Cancelbtn);
+		
 
 	}
+	
 }

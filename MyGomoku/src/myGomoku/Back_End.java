@@ -16,7 +16,7 @@ public class Back_End {
 	private boolean depth0=false;
 	private int alpha=-1000000;
 	private int beta = 1000000;
-	public ArrayList<Moves> bestpath;
+	public ArrayList<Moves> bestpath = new ArrayList<Moves>();
 	public int minimaxiteration=0;
 	public int myaiiteration=0;
 
@@ -568,7 +568,7 @@ public class Back_End {
 				}
 			}
 		}
-		for(int i=0;i<result.size()-1;i++) {
+		for(int i=0;i<result.size();i++) {
 			int x=result.get(i).getX();
 			int y = result.get(i).getY();
 			//up-down
@@ -755,6 +755,65 @@ public class Back_End {
 		Collections.sort(result,Moves.percentageComparator);
 		return result;
 	}
+	
+//	public ArrayList<Moves> SortedCandidate(ArrayList<Moves> movinglist,char[][] board) {
+//		ArrayList<Moves> result = new ArrayList<Moves>();
+//		for(int i=0;i<movinglist.size();i++)
+//		{
+//			int x=movinglist.get(i).getX();
+//			int y=movinglist.get(i).getY();
+//			if(x-1>=0&&y-1>=0) {result.add(new Moves(x-1,y-1,0));}
+//			if(x>=0&&y-1>=0) {result.add(new Moves(x,y-1,0));}
+//			if(x+1<=14&&y-1>=0) {result.add(new Moves(x+1,y-1));}
+//			if(x-1>=0&&y>=0) {result.add(new Moves(x-1,y));}
+//			if(x+1<=14&&y>=0) {result.add(new Moves(x+1,y));}
+//			if(x-1>=0&&y+1<=14) {result.add(new Moves(x-1,y+1));}
+//			if(x>=0&&y+1<=14) {result.add(new Moves(x,y+1));}
+//			if(x+1<=14&&y+1<=14) {result.add(new Moves(x+1,y+1));}
+//
+//			if(scaledis==2) {	
+//				if(x-2>=0&&y-2>=0) {result.add(new Moves(x-2,y-2));}
+//				if(x>=0&&y-2>=0) {result.add(new Moves(x,y-2));}
+//				if(x+2<=14&&y-2>=0) {result.add(new Moves(x+2,y-2));}
+//				if(x-2>=0&&y>=0) {result.add(new Moves(x-2,y));}
+//				if(x+2<=14&&y>=0) {result.add(new Moves(x+2,y));}
+//				if(x-2>=0&&y+2<=14) {result.add(new Moves(x-2,y+2));}
+//				if(x>=0&&y+2<=14) {result.add(new Moves(x,y+2));}
+//				if(x+2<=14&&y+2<=14) {result.add(new Moves(x+2,y+2));}
+//			}
+//		}
+//		for(int i=0;i<movinglist.size();i++) {
+//			for(int j=0;j<result.size();j++)
+//			{
+//				if(movinglist.get(i).getX()==result.get(j).getX()&&movinglist.get(i).getY()==result.get(j).getY()) {
+//					result.remove(j);
+//					j--;
+//				}
+//			}
+//		}
+//		for(int i=0;i<result.size()-1;i++) {
+//			for(int j=i+1;j<result.size();j++)
+//			{
+//				if(result.get(i).getX()==result.get(j).getX()&&result.get(i).getY()==result.get(j).getY()) {
+//					result.remove(j);
+//					j--;
+//				}
+//			}
+//		}
+//		for(int i=0;i<result.size();i++) {
+//			int value=0;
+//			movinglist.add(new Moves(result.get(i).getX(),result.get(i).getY()));
+//			board[result.get(i).getX()][result.get(i).getY()]='B';
+//			value = Math.max(value, Math.max(evaluator(board,movinglist,1).getBoardEval(),evaluator(board,movinglist,2 ).getBoardEval()));
+//			board[result.get(i).getX()][result.get(i).getY()]='W';
+//			value = Math.max(value, Math.max(evaluator(board,movinglist,1).getBoardEval(),evaluator(board,movinglist,2 ).getBoardEval()));
+//			board[result.get(i).getX()][result.get(i).getY()]='-';
+//			movinglist.remove(movinglist.size()-1);
+//			result.get(i).change(value);
+//		}
+//		Collections.sort(result,Moves.percentageComparator);
+//		return result;
+//	}
 
 	public char boardChecker(char[][] board) {
 		five.clear();
@@ -1483,7 +1542,9 @@ public class Back_End {
 		//Dead Four
 		if(count==4&&cut1>=1&&cut2==0&&block2==true&&cut3==0&&cut4==0){bs.Deadfour().add(moves);}
 		if(count==4&&cut1==0&&cut2>=1&&block1==true&&cut3==0&&cut4==0){bs.Deadfour().add(moves);}
-
+		
+		if(count==4&&block1==true&&block2==true){bs.CDeadfour().add(moves);}
+		
 		if(count==4&&cut1>=0&&cut2==1&&cut3==0&&cut4==3&&dupli2<1){bs.JDeadfour().add(moves);}
 		if(count==4&&cut1>=1&&cut2>=0&&cut3==3&&cut4==0&&dupli<1){bs.JDeadfour().add(moves);}
 		if(count==4&&cut1>=0&&cut2>=0&&cut3==1&&cut4==0){bs.JDeadfour().add(moves);}
