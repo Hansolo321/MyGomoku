@@ -29,8 +29,8 @@ public class Back_End {
 		for( c=mouseY-mouseaccuracy; c<mouseY+mouseaccuracy; c++) {
 			for( r=mouseX-mouseaccuracy; r<mouseX+mouseaccuracy; r++) {
 				if( ((r-1-20)%39==0) && ((c-1-20)%39==0) ) {
-					distance = Math.sqrt(((r-mouseX)^2) + ((c-mouseY)^2));
-					//distance = ((r-mouseX)^2) + ((c-mouseY)^2);
+					//distance = Math.sqrt(((r-mouseX)^2) + ((c-mouseY)^2));
+					distance = ((r-mouseX)^2) + ((c-mouseY)^2);
 					if(distance<close) {
 						answer[0]=r;
 						answer[1]=c;
@@ -178,9 +178,11 @@ public class Back_End {
 		int[] result=new int[] {0,0};
 		minimaxiteration=0;
 		if(key%2==0) {
+			bestpath=new ArrayList<Moves>();
 			result= MinimaxWhite(board, key,  movinglist,depth,alpha,beta,maxplayer);
 		}
 		else {
+			bestpath=new ArrayList<Moves>();
 			result=MinimaxBlack(board, key,  movinglist,depth,alpha,beta,maxplayer);
 		}
 		return result;
@@ -195,7 +197,7 @@ public class Back_End {
 			return new int[] {movinglist.get(movinglist.size()-1).getX(),movinglist.get(movinglist.size()-1).getY()};}
 		if(maxplayer) {
 			int maxEval=-1000000;
-			int WY=0;int WX=0;
+			int WX=0;int WY=0;
 			for(int i=scaled[0];i<=scaled[2];i++) {
 				for(int j=scaled[1];j<=scaled[3];j++) {
 					if(board[i][j]!='B'&&board[i][j]!='W') {
@@ -219,6 +221,11 @@ public class Back_End {
 							maxEval=whitevalue-blackvalue;
 							WX=movinglist.get(movinglist.size()-1).getX();
 							WY=movinglist.get(movinglist.size()-1).getY();
+							
+//							if(bestpath.isEmpty()) {bestpath.add(new Moves(WX,WY,"W"));}
+//							else {bestpath.remove(bestpath.size()-1);
+//							bestpath.add(new Moves(WX,WY,"W"));}
+							
 							key--;
 							board[WX][WY]='-';
 							movinglist.remove(movinglist.size()-1);
@@ -240,7 +247,7 @@ public class Back_End {
 		}
 		else {
 			int minEval=1000000;
-			int BY=0;int BX=0;
+			int BX=0;int BY=0;			
 			for(int i=scaled[0];i<=scaled[2];i++) {
 				for(int j=scaled[1];j<=scaled[3];j++) {
 					if(board[i][j]!='B'&&board[i][j]!='W') {
@@ -264,6 +271,11 @@ public class Back_End {
 							minEval=whitevalue-blackvalue;
 							BX=movinglist.get(movinglist.size()-1).getX();
 							BY=movinglist.get(movinglist.size()-1).getY();
+							
+//							if(bestpath.size()==1) {bestpath.add(new Moves(BX,BY,"B"));}
+//							else if(bestpath.size()>=1) {bestpath.remove(bestpath.size()-1);
+//							bestpath.add(new Moves(BX,BY,"B"));}
+							
 							key--;
 							board[BX][BY]='-';
 							movinglist.remove(movinglist.size()-1);
@@ -275,7 +287,7 @@ public class Back_End {
 						}
 						beta = Math.min(beta, diff);
 						if(beta <= alpha) {
-							break;
+						break;
 						}
 					}
 				}
@@ -415,7 +427,6 @@ public class Back_End {
 				}
 				key++;
 				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
-				//bestpath.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
 				result=Myalgo( board,  key, movinglist,depth-1,alpha,beta,false,whitemoves);
 				if(!depth0) {
 					if(whitemoves) {
@@ -423,7 +434,6 @@ public class Back_End {
 					else {board[result[0]][result[1]]='W';}
 					key++;
 					movinglist.add(new Moves(result[0],result[1]));	
-					//bestpath.add(new Moves(result[0],result[1]));
 				}
 				int whitevalue=evaluator(board, movinglist,2).getBoardEval();
 				int blackvalue=evaluator(board, movinglist,1).getBoardEval();
@@ -435,7 +445,7 @@ public class Back_End {
 					board[result[0]][result[1]]='-';
 					key--;
 					movinglist.remove(movinglist.size()-1);
-					//bestpath.remove(bestpath.size()-1);
+					
 				}
 				depth0=false;
 				if(maxEval<diff) {
@@ -476,7 +486,6 @@ public class Back_End {
 				}
 				key++;
 				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
-				//bestpath.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
 				result=Myalgo( board,  key, movinglist,depth-1,alpha,beta,true,whitemoves);
 				if(!depth0) {
 					if(whitemoves) {
@@ -484,7 +493,6 @@ public class Back_End {
 					else {board[result[0]][result[1]]='B';}
 					key++;
 					movinglist.add(new Moves(result[0],result[1]));	
-					//bestpath.add(new Moves(result[0],result[1]));
 				}
 				int whitevalue=evaluator(board, movinglist,2).getBoardEval();
 				int blackvalue=evaluator(board, movinglist,1).getBoardEval();
@@ -496,7 +504,6 @@ public class Back_End {
 					board[result[0]][result[1]]='-';
 					key--;
 					movinglist.remove(movinglist.size()-1);
-					//bestpath.remove(bestpath.size()-1);
 				}
 				depth0=false;
 				if(minEval>diff) {
@@ -514,7 +521,6 @@ public class Back_End {
 					key--;
 					board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
 					movinglist.remove(movinglist.size()-1);
-					//bestpath.remove(bestpath.size()-1);
 				}
 				beta = Math.min(beta, diff);
 				if(beta <= alpha) {
@@ -757,65 +763,65 @@ public class Back_End {
 		Collections.sort(result,Moves.percentageComparator);
 		return result;
 	}
-	
-//	public ArrayList<Moves> SortedCandidate(ArrayList<Moves> movinglist,char[][] board) {
-//		ArrayList<Moves> result = new ArrayList<Moves>();
-//		for(int i=0;i<movinglist.size();i++)
-//		{
-//			int x=movinglist.get(i).getX();
-//			int y=movinglist.get(i).getY();
-//			if(x-1>=0&&y-1>=0) {result.add(new Moves(x-1,y-1,0));}
-//			if(x>=0&&y-1>=0) {result.add(new Moves(x,y-1,0));}
-//			if(x+1<=14&&y-1>=0) {result.add(new Moves(x+1,y-1));}
-//			if(x-1>=0&&y>=0) {result.add(new Moves(x-1,y));}
-//			if(x+1<=14&&y>=0) {result.add(new Moves(x+1,y));}
-//			if(x-1>=0&&y+1<=14) {result.add(new Moves(x-1,y+1));}
-//			if(x>=0&&y+1<=14) {result.add(new Moves(x,y+1));}
-//			if(x+1<=14&&y+1<=14) {result.add(new Moves(x+1,y+1));}
-//
-//			if(scaledis==2) {	
-//				if(x-2>=0&&y-2>=0) {result.add(new Moves(x-2,y-2));}
-//				if(x>=0&&y-2>=0) {result.add(new Moves(x,y-2));}
-//				if(x+2<=14&&y-2>=0) {result.add(new Moves(x+2,y-2));}
-//				if(x-2>=0&&y>=0) {result.add(new Moves(x-2,y));}
-//				if(x+2<=14&&y>=0) {result.add(new Moves(x+2,y));}
-//				if(x-2>=0&&y+2<=14) {result.add(new Moves(x-2,y+2));}
-//				if(x>=0&&y+2<=14) {result.add(new Moves(x,y+2));}
-//				if(x+2<=14&&y+2<=14) {result.add(new Moves(x+2,y+2));}
-//			}
-//		}
-//		for(int i=0;i<movinglist.size();i++) {
-//			for(int j=0;j<result.size();j++)
-//			{
-//				if(movinglist.get(i).getX()==result.get(j).getX()&&movinglist.get(i).getY()==result.get(j).getY()) {
-//					result.remove(j);
-//					j--;
-//				}
-//			}
-//		}
-//		for(int i=0;i<result.size()-1;i++) {
-//			for(int j=i+1;j<result.size();j++)
-//			{
-//				if(result.get(i).getX()==result.get(j).getX()&&result.get(i).getY()==result.get(j).getY()) {
-//					result.remove(j);
-//					j--;
-//				}
-//			}
-//		}
-//		for(int i=0;i<result.size();i++) {
-//			int value=0;
-//			movinglist.add(new Moves(result.get(i).getX(),result.get(i).getY()));
-//			board[result.get(i).getX()][result.get(i).getY()]='B';
-//			value = Math.max(value, Math.max(evaluator(board,movinglist,1).getBoardEval(),evaluator(board,movinglist,2 ).getBoardEval()));
-//			board[result.get(i).getX()][result.get(i).getY()]='W';
-//			value = Math.max(value, Math.max(evaluator(board,movinglist,1).getBoardEval(),evaluator(board,movinglist,2 ).getBoardEval()));
-//			board[result.get(i).getX()][result.get(i).getY()]='-';
-//			movinglist.remove(movinglist.size()-1);
-//			result.get(i).change(value);
-//		}
-//		Collections.sort(result,Moves.percentageComparator);
-//		return result;
-//	}
+
+	//	public ArrayList<Moves> SortedCandidate(ArrayList<Moves> movinglist,char[][] board) {
+	//		ArrayList<Moves> result = new ArrayList<Moves>();
+	//		for(int i=0;i<movinglist.size();i++)
+	//		{
+	//			int x=movinglist.get(i).getX();
+	//			int y=movinglist.get(i).getY();
+	//			if(x-1>=0&&y-1>=0) {result.add(new Moves(x-1,y-1,0));}
+	//			if(x>=0&&y-1>=0) {result.add(new Moves(x,y-1,0));}
+	//			if(x+1<=14&&y-1>=0) {result.add(new Moves(x+1,y-1));}
+	//			if(x-1>=0&&y>=0) {result.add(new Moves(x-1,y));}
+	//			if(x+1<=14&&y>=0) {result.add(new Moves(x+1,y));}
+	//			if(x-1>=0&&y+1<=14) {result.add(new Moves(x-1,y+1));}
+	//			if(x>=0&&y+1<=14) {result.add(new Moves(x,y+1));}
+	//			if(x+1<=14&&y+1<=14) {result.add(new Moves(x+1,y+1));}
+	//
+	//			if(scaledis==2) {	
+	//				if(x-2>=0&&y-2>=0) {result.add(new Moves(x-2,y-2));}
+	//				if(x>=0&&y-2>=0) {result.add(new Moves(x,y-2));}
+	//				if(x+2<=14&&y-2>=0) {result.add(new Moves(x+2,y-2));}
+	//				if(x-2>=0&&y>=0) {result.add(new Moves(x-2,y));}
+	//				if(x+2<=14&&y>=0) {result.add(new Moves(x+2,y));}
+	//				if(x-2>=0&&y+2<=14) {result.add(new Moves(x-2,y+2));}
+	//				if(x>=0&&y+2<=14) {result.add(new Moves(x,y+2));}
+	//				if(x+2<=14&&y+2<=14) {result.add(new Moves(x+2,y+2));}
+	//			}
+	//		}
+	//		for(int i=0;i<movinglist.size();i++) {
+	//			for(int j=0;j<result.size();j++)
+	//			{
+	//				if(movinglist.get(i).getX()==result.get(j).getX()&&movinglist.get(i).getY()==result.get(j).getY()) {
+	//					result.remove(j);
+	//					j--;
+	//				}
+	//			}
+	//		}
+	//		for(int i=0;i<result.size()-1;i++) {
+	//			for(int j=i+1;j<result.size();j++)
+	//			{
+	//				if(result.get(i).getX()==result.get(j).getX()&&result.get(i).getY()==result.get(j).getY()) {
+	//					result.remove(j);
+	//					j--;
+	//				}
+	//			}
+	//		}
+	//		for(int i=0;i<result.size();i++) {
+	//			int value=0;
+	//			movinglist.add(new Moves(result.get(i).getX(),result.get(i).getY()));
+	//			board[result.get(i).getX()][result.get(i).getY()]='B';
+	//			value = Math.max(value, Math.max(evaluator(board,movinglist,1).getBoardEval(),evaluator(board,movinglist,2 ).getBoardEval()));
+	//			board[result.get(i).getX()][result.get(i).getY()]='W';
+	//			value = Math.max(value, Math.max(evaluator(board,movinglist,1).getBoardEval(),evaluator(board,movinglist,2 ).getBoardEval()));
+	//			board[result.get(i).getX()][result.get(i).getY()]='-';
+	//			movinglist.remove(movinglist.size()-1);
+	//			result.get(i).change(value);
+	//		}
+	//		Collections.sort(result,Moves.percentageComparator);
+	//		return result;
+	//	}
 
 	public char boardChecker(char[][] board) {
 		five.clear();
@@ -1545,7 +1551,7 @@ public class Back_End {
 		if(count==4&&cut1>=1&&cut2==0&&block2==true&&cut3==0&&cut4==0){bs.Deadfour().add(moves);}
 		if(count==4&&cut1==0&&cut2>=1&&block1==true&&cut3==0&&cut4==0){bs.Deadfour().add(moves);}
 
-		
+
 		if(count==4&&block1==true&&block2==true){bs.CDeadfour().add(moves);}
 
 		if(count==4&&cut1>=0&&cut2==1&&cut3==0&&cut4==3&&dupli2<1){bs.JDeadfour().add(moves);}
@@ -1558,8 +1564,8 @@ public class Back_End {
 
 	}
 
-//	public ArrayList<Moves> BestPath(){
-//		bestpath.add(new Moves(1,1));
-//		return bestpath;
-//	}
+	//	public ArrayList<Moves> BestPath(){
+	//		bestpath.add(new Moves(1,1));
+	//		return bestpath;
+	//	}
 }

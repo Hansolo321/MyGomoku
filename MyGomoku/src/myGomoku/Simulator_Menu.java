@@ -38,6 +38,7 @@ public class Simulator_Menu implements Runnable{
 	public boolean Animation=true;
 	public char[][] board;
 	public ArrayList<Moves> movinglist=new ArrayList<Moves>();
+	public boolean gameend;
 
 	@Override
 	public void run() {
@@ -197,7 +198,8 @@ public class Simulator_Menu implements Runnable{
 				else if(MyAIW.isSelected()) {
 					White="MyAI";
 				}
-				File file = new File("C://Users//lesli//Desktop//record.txt");
+				File file = new File("record.txt");
+				file.delete();
 				frame.setVisible(false);
 				Gomoku_GUI gui = new Gomoku_GUI();	
 				gui.k=k;
@@ -209,7 +211,20 @@ public class Simulator_Menu implements Runnable{
 				gui.Animation=Animation;
 				gui.AT1animation=AT1animation;
 				gui.frame.setVisible(true);
+				gui.gameend=gameend;
+				if (gameend) {
+					gui.gameend=false;
+					gui.k=1;
+					gui.movinglist.clear();
+					for(int i=0;i<15;i++) {
+						for(int j=0;j<15;j++) {
+							board[i][j]='-';
+						}
+					}
+				}
+				
 				gui.btnsimulate.doClick();
+				
 			}
 		});
 		ApllyButton.setFont(new Font("Times New Roman", Font.BOLD, 18));
@@ -224,12 +239,14 @@ public class Simulator_Menu implements Runnable{
 			public void actionPerformed(ActionEvent arg0) {
 				frame.setVisible(false);
 				Gomoku_GUI gui = new Gomoku_GUI();
+				gui.k=k;
 				gui.board=board;
 				gui.simuApply=false;
 				gui.simuB=Black;
 				gui.simuW=White;
 				gui.movinglist=movinglist;
 				gui.Animation=Animation;
+				gui.gameend=gameend;
 				gui.AT1animation=AT1animation;
 				gui.frame.setVisible(true);
 				

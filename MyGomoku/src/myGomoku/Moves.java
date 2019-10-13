@@ -13,6 +13,7 @@ public class Moves {
 	private int Yposition;
 	private int Percentage;
 	private String Stone;
+	private String Color;
 	public Moves(int Xposition, int Yposition, int index, String Stone) {
 		this.index=index;
 		this.Xposition=Xposition;
@@ -29,6 +30,12 @@ public class Moves {
 		this.Xposition=Xposition;
 		this.Yposition=Yposition;
 		this.Percentage= Percentage;
+	}
+	
+	public Moves(int Xposition,int Yposition,String Color) {
+		this.Xposition=Xposition;
+		this.Yposition=Yposition;
+		this.Color= Color;
 	}
 
 	public int getPercentage() {
@@ -65,6 +72,10 @@ public class Moves {
 	
 	public String PercentageToString() {
 		return "["+String.format("%02d",Xposition)+","+String.format("%02d",Yposition)+"|"+Percentage+"] ";
+	}
+	
+	public String pathToString() {
+		return "["+String.format("%02d",Xposition)+","+String.format("%02d",Yposition)+"|"+Color+"] ";
 	}
 
 	public static Comparator<Moves> percentageComparator = new Comparator<Moves>() {

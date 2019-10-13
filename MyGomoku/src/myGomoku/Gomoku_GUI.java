@@ -41,7 +41,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 
 public class Gomoku_GUI {
@@ -63,13 +62,14 @@ public class Gomoku_GUI {
 	private JTextArea Analysis1 = new JTextArea();
 	public int k=1;
 	private boolean pvp=true;
-	private boolean gameend=false;
+	public boolean gameend=false;
 	private Back_End backend= new Back_End();
 	private ArrayList<Moves> five=new ArrayList<Moves>();
 	private boolean readfile=false;
 	private boolean evaluator=true;
 	private int[] evaluatorrange=new int[4];
 	public JButton btnsimulate = new JButton("Simulate");
+	public JButton btnNewGame = new JButton("New Game");
 	private Timer TM=null;
 	private Timer TM1=null;
 	private ArrayList<Moves> OpeningAry = new ArrayList<Moves>();
@@ -307,7 +307,7 @@ public class Gomoku_GUI {
 		btnstop.setBounds(784, 524, 97, 25);
 		frame.getContentPane().add(btnstop);
 
-		JButton btnNewGame = new JButton("New Game");
+		 btnNewGame = new JButton("New Game");
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -364,6 +364,7 @@ public class Gomoku_GUI {
 					Simulator_Menu SM = new Simulator_Menu();
 					SM.run();
 					SM.board=board;
+					SM.gameend=gameend;
 					SM.k=k;
 					SM.movinglist=movinglist;
 					SM.Black=simuB;
@@ -1075,8 +1076,12 @@ public class Gomoku_GUI {
 					}
 					k++;
 				}
+				Analysis.append("\n");
+				for(int i=0;i<backend.bestpath.size();i++) {
+					Analysis.append(backend.bestpath.get(i).pathToString());
+				}
 				evaluresultB= backend.evaluator(board, movinglist,1);
-				Analysis1.append("\nBlack side board state and value:");
+				Analysis1.append("\n\nBlack side board state and value:");
 				Analysis1.append(evaluresultB.ToString());
 
 				evaluresultW= backend.evaluator(board, movinglist,2);

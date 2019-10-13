@@ -92,14 +92,13 @@ public class BoardState {
 		if(Deadthree.size()==1&&((Livethree.size()==1)||(JLivethree.size()==1))) {boardEval+=1000;}
 		if(Deadfour.size()!=0) {boardEval+=500;}
 		if(JDeadfour.size()!=0) {boardEval+=300;}
-		if(CDeadfour.size()!=0) {boardEval+=CDeadfour.size()*100;}
+		if(CDeadfour.size()!=0) {boardEval+=(CDeadfour.size()*100);}
 		if(Livethree.size()!=0) {boardEval+=100;}
 		if(JLivethree.size()!=0) {boardEval+=90;}
-		if(Deadthree.size()!=0) {boardEval+=5*Deadthree.size();}
-		if(Livetwo.size()==2) {boardEval+=Livetwo.size()*5;}
-		if(Livetwo.size()!=0) {boardEval+=3;}
+		if(Deadthree.size()!=0) {boardEval+=(5*Deadthree.size());}
+		if(Livetwo.size()!=0) {boardEval+=(Livetwo.size()*5);}
 		if(Deadtwo.size()!=0) {boardEval+=2*Deadtwo.size();}
-		else {boardEval+=1;}
+	//	else {boardEval+=1;}
 		return boardEval;
 	}
 	
@@ -159,7 +158,7 @@ public class BoardState {
 				result+="\n";}
 		}
 		
-		result+="\nLive Three: \n";
+		result+="\nJLive Three: \n";
 		for(int i=0;i<JLivethree.size();i++) {
 			for(int j=0;j<JLivethree.get(i).size();j++) {
 				result+=JLivethree.get(i).get(j).toString();
