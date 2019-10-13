@@ -16,7 +16,11 @@ public class Back_End {
 	private boolean depth0=false;
 	private int alpha=-1000000;
 	private int beta = 1000000;
+<<<<<<< HEAD
 	public ArrayList<Moves> bestpath = new ArrayList<Moves>();
+=======
+	public ArrayList<Moves> bestpath=new ArrayList<Moves>();
+>>>>>>> branch 'master' of https://github.com/Hansolo321/MyGomoku.git
 	public int minimaxiteration=0;
 	public int myaiiteration=0;
 
@@ -1542,9 +1546,14 @@ public class Back_End {
 		//Dead Four
 		if(count==4&&cut1>=1&&cut2==0&&block2==true&&cut3==0&&cut4==0){bs.Deadfour().add(moves);}
 		if(count==4&&cut1==0&&cut2>=1&&block1==true&&cut3==0&&cut4==0){bs.Deadfour().add(moves);}
+<<<<<<< HEAD
 		
 		if(count==4&&block1==true&&block2==true){bs.CDeadfour().add(moves);}
 		
+=======
+		if(count==4&&block1==true&&block2==true&&cut3==0&&cut4==0){bs.JDeadfour().add(moves);}
+
+>>>>>>> branch 'master' of https://github.com/Hansolo321/MyGomoku.git
 		if(count==4&&cut1>=0&&cut2==1&&cut3==0&&cut4==3&&dupli2<1){bs.JDeadfour().add(moves);}
 		if(count==4&&cut1>=1&&cut2>=0&&cut3==3&&cut4==0&&dupli<1){bs.JDeadfour().add(moves);}
 		if(count==4&&cut1>=0&&cut2>=0&&cut3==1&&cut4==0){bs.JDeadfour().add(moves);}

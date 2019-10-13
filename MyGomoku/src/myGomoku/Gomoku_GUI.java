@@ -81,7 +81,7 @@ public class Gomoku_GUI {
 	private BoardState evaluresultW;
 	private String AIversion="Greedy";
 	public static int depth=2;
-	public static int Mydepth=5;
+	public static int Mydepth=6;
 	public String simuW="Greedy";
 	public String simuB="Minimax";
 	public boolean simuApply=false;
