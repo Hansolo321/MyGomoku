@@ -36,9 +36,12 @@ import java.util.Calendar;
 import java.util.Random;
 import java.util.Scanner;
 import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 
 public class Gomoku_GUI {
@@ -46,7 +49,7 @@ public class Gomoku_GUI {
 	public JFrame frame;
 	private JPanel BoardPanel = new JPanel();
 	private JLabel number = new JLabel();
-	public long starttime,endtime,avgtime,iteration=1;
+	public long starttime1,endtime1,avertime1,starttime2,endtime2,avertime2,iteration=1;
 	private int mouseX,mouseY,mouseX1,mouseY1;
 	private int[] AI=new int[2];
 	private JLabel animationlabel=new JLabel();
@@ -371,6 +374,20 @@ public class Gomoku_GUI {
 				}
 
 				if(simuApply) {
+
+
+					File file =new File("record.txt");
+					FileWriter fr = null;
+					try {
+						fr = new FileWriter(file,true);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					BufferedWriter br = new BufferedWriter(fr);
+
+
+
 					Analysis1.append("Processing.");
 					String a;
 					for( int i=1;i<=k;i++) {
@@ -446,50 +463,77 @@ public class Gomoku_GUI {
 					if(!gameend&&k>=5) {
 						flag=true;
 						while(!gameend&&flag==true) {
-
 							if(evaluator) {
 								evaluatorrange=backend.scale(movinglist);
-
 							}
 							else {
 								backend.scaled=new int[] {0,0,14,14};
 							}
 							if(five.size()!=5) {
 								for(int n=0;n<iteration;n++) {
-									starttime = System.nanoTime();
-									if(k%2==0) {//white
+									Analysis1.append("\n\nBlack side Algo: "+simuB+"\n");
+									Analysis1.append("White side Algo: "+simuW);
+									if(k%2!=0) {//black
+										starttime1 = System.nanoTime();
 										if(simuW=="MyAI") {
 											AI=backend.MyAI(board,k,movinglist,Mydepth,true);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
-											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");}
-										else if(simuW=="Greedy") {AI=backend.Greedy(board,k,movinglist);}
+											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
+										}
+										else if(simuW=="Greedy") {
+											AI=backend.Greedy(board,k,movinglist);
+											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
+											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
+										}
 										else if(simuW=="Minimax") {
 											AI=backend.Minimax(board,k,movinglist,depth,true);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
-											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");}
-										Analysis1.append("\nBlack side Algo: "+simuB+"\n");
-										Analysis1.append("White side Algo: "+simuW);
+											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
+										}
+										endtime1 = System.nanoTime();
+										avertime1+=(endtime1-starttime1);
+										avertime1/=(iteration*1000000);
+										
+										try {
+
+											br.write(String.valueOf(avertime1)+"\n");
+										} catch (IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
 									}
 									else {
+										starttime2 = System.nanoTime();
 										if(simuB=="MyAI") {
 											AI=backend.MyAI(board,k,movinglist,Mydepth,true);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
-											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");}
-										else if(simuB=="Greedy") {AI=backend.Greedy(board,k,movinglist);}
+											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
+										}
+										else if(simuB=="Greedy") {
+											AI=backend.Greedy(board,k,movinglist);
+											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
+											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
+										}
 										else if(simuB=="Minimax") {
 											AI=backend.Minimax(board,k,movinglist,depth,true);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
-											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");}
-										Analysis1.append("\nBlack side Algo: "+simuB+"\n");
-										Analysis1.append("White side Algo: "+simuW);
+											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
+										}
+										endtime2 = System.nanoTime();
+										avertime2+=(endtime2-starttime2);
+										avertime2/=(iteration*1000000);
+										try {
 
+											br.write(String.valueOf(avertime2)+"\n");
+										} catch (IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
 									}
-									endtime = System.nanoTime();
-									avgtime+=(endtime-starttime);
 								}
-								avgtime/=iteration;
-								avgtime/=1000000;
-								Analysis1.append("\n\nAverate time consuming for last move:"+avgtime);
+
+								Analysis1.append("\nAverate time consuming for "+simuB+":\n"+avertime1);
+								Analysis1.append("\nAverate time consuming for "+simuW+":\n"+avertime2);
 
 								if(k%2==0) {
 									board[AI[0]][AI[1]]='W';
@@ -520,6 +564,15 @@ public class Gomoku_GUI {
 							else {flag=true;}
 						}
 						simuApply=true;
+
+
+						
+					}
+					try {
+						br.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 				}
 				Analysis1.setCaretPosition(0);
@@ -623,18 +676,18 @@ public class Gomoku_GUI {
 							}
 							else if(!gameend&&k>=5) {
 								for(int n=0;n<iteration;n++) {
-									starttime = System.nanoTime();
+									starttime1 = System.nanoTime();
 									if(AIversion.equals("Greedy")) {
 										AI=backend.Greedy(board,k,movinglist);}
 									else if(AIversion.equals("Minimax")) {
 										AI=backend.Minimax(board,k,movinglist,depth,true);}
 									else {
 										AI=backend.MyAI(board,k,movinglist,Mydepth,true);}
-									endtime = System.nanoTime();
-									avgtime+=(endtime-starttime);
+									endtime1 = System.nanoTime();
+									avertime1+=(endtime1-starttime1);
 								}
-								avgtime/=iteration;
-								avgtime/=1000000;
+								avertime1/=iteration;
+								avertime1/=1000000;
 								if(k%2==0) {
 									board[AI[0]][AI[1]]='W';
 									movinglist.add (new Moves( AI[0], AI[1], k, "WHITE")) ;
@@ -716,7 +769,7 @@ public class Gomoku_GUI {
 					else if(AIversion.equals("Minimax")) {
 						Analysis.append("\n\nNumber of minimax algo calculation: "+backend.minimaxiteration);}
 					Analysis.append("\n\nBest Path: "+backend.bestpath.toString());
-					Analysis.append("\n\nAverage time: " + avgtime +"ms"+ " ("+iteration+" iteration)");
+					Analysis.append("\n\nAverage time: " + avertime1 +"ms"+ " ("+iteration+" iteration)");
 				}
 				Analysis1.setCaretPosition(0);
 				//////////////////////////////////////TEST AREA//////////////////////////////////////
@@ -725,8 +778,8 @@ public class Gomoku_GUI {
 				for(int i=0;i<Candidate.size();i++) {
 					Analysis.append(Candidate.get(i).PercentageToString());
 				}
-	
-			
+
+
 				//////////////////////////////////////TEST AREA//////////////////////////////////////
 			}
 		});
@@ -982,20 +1035,20 @@ public class Gomoku_GUI {
 					}
 					if(five.size()!=5) {
 						for(int n=0;n<iteration;n++) {
-							starttime = System.nanoTime();
+							starttime1 = System.nanoTime();
 							if(AIversion.equals("Greedy")) {
 								AI=backend.Greedy(board,k,movinglist);}
 							else if(AIversion.equals("Minimax")) {
 								AI=backend.Minimax(board,k,movinglist,depth,true);
-								}
+							}
 							else {
 								AI=backend.MyAI(board,k,movinglist,Mydepth,true);
 							}
-							endtime = System.nanoTime();
-							avgtime+=(endtime-starttime);
+							endtime1 = System.nanoTime();
+							avertime1+=(endtime1-starttime1);
 						}
-						avgtime/=iteration;
-						avgtime/=1000000;
+						avertime1/=iteration;
+						avertime1/=1000000;
 						if(k%2==0) {
 							board[AI[0]][AI[1]]='W';
 							movinglist.add (new Moves( AI[0], AI[1], k, "WHITE")) ;
@@ -1011,7 +1064,7 @@ public class Gomoku_GUI {
 						else if(AIversion.equals("MyAI")){
 							Analysis.append("\n\nNumber of new alog calculation: "+backend.myaiiteration);
 						}
-						
+
 						BoardPanel.revalidate();
 						BoardPanel.repaint();
 
@@ -1513,7 +1566,7 @@ public class Gomoku_GUI {
 		Analysis.setForeground(Color.BLACK);
 		Analysis.setText("Time comsuming:\n");
 		Analysis.setForeground(Color.BLACK);
-		Analysis.append("Average time: " + avgtime +"ms"+ " ("+iteration+" iteration)\n\n");
+		Analysis.append("Average time: " + avertime1 +"ms"+ " ("+iteration+" iteration)\n\n");
 		String a = "Time comsuming:";
 		int p0 = a.indexOf("Time comsuming:");
 		int p1 = p0 + "Time comsuming:".length();

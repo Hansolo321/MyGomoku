@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
@@ -196,6 +197,7 @@ public class Simulator_Menu implements Runnable{
 				else if(MyAIW.isSelected()) {
 					White="MyAI";
 				}
+				File file = new File("C://Users//lesli//Desktop//record.txt");
 				frame.setVisible(false);
 				Gomoku_GUI gui = new Gomoku_GUI();	
 				gui.k=k;
