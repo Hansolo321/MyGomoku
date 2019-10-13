@@ -17,19 +17,20 @@ public class Back_End {
 	private int alpha=-1000000;
 	private int beta = 1000000;
 	public ArrayList<Moves> bestpath = new ArrayList<Moves>();
-
+	private int mouseaccuracy=23;
 	public int minimaxiteration=0;
 	public int myaiiteration=0;
 
 	public int[] stoneposition(int mouseX, int mouseY) {
-		double close=100;
+		double close=65;
 		double distance=0;
 		int[] answer= new int[2];
 		int r,c;
-		for( c=mouseY-23; c<mouseY+23; c++) {
-			for( r=mouseX-23; r<mouseX+23; r++) {
+		for( c=mouseY-mouseaccuracy; c<mouseY+mouseaccuracy; c++) {
+			for( r=mouseX-mouseaccuracy; r<mouseX+mouseaccuracy; r++) {
 				if( ((r-1-20)%39==0) && ((c-1-20)%39==0) ) {
 					distance = Math.sqrt(((r-mouseX)^2) + ((c-mouseY)^2));
+					//distance = ((r-mouseX)^2) + ((c-mouseY)^2);
 					if(distance<close) {
 						answer[0]=r;
 						answer[1]=c;
