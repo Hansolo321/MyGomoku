@@ -222,7 +222,6 @@ public class Simulator_Menu implements Runnable{
 						}
 					}
 				}
-				
 				gui.btnsimulate.doClick();
 				
 			}

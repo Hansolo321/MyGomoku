@@ -14,8 +14,8 @@ public class Back_End {
 	private int scalednum=2;
 	private int scaledis=1;
 	private boolean depth0=false;
-	private int alpha=-1000000;
-	private int beta = 1000000;
+	private int alpha=-1000000000;
+	private int beta = 1000000000;
 	public ArrayList<Moves> bestpath = new ArrayList<Moves>();
 	private int mouseaccuracy=23;
 	public int minimaxiteration=0;
@@ -177,69 +177,90 @@ public class Back_End {
 	public  int[] Minimax(char[][] board, int key, ArrayList<Moves> movinglist,int depth,boolean maxplayer) {
 		int[] result=new int[] {0,0};
 		minimaxiteration=0;
-		if(key%2==0) {
-			bestpath=new ArrayList<Moves>();
-			result= MinimaxWhite(board, key,  movinglist,depth,alpha,beta,maxplayer);
-		}
-		else {
-			bestpath=new ArrayList<Moves>();
-			result=MinimaxBlack(board, key,  movinglist,depth,alpha,beta,maxplayer);
-		}
+		boolean whitemoves = false;
+		if(key%2==0) {whitemoves = true;}
+		else {whitemoves = false;}
+		/*test used for candidate selection*/
+		//				if(key%2==0) {
+		//					bestpath=new ArrayList<Moves>();
+		//					result= MinimaxWhite(board, key,  movinglist,depth,alpha,beta,maxplayer);
+		//				}
+		//				else {
+		//					bestpath=new ArrayList<Moves>();
+		//					result=MinimaxBlack(board, key,  movinglist,depth,alpha,beta,maxplayer);
+		//				}
+		bestpath=new ArrayList<Moves>();
+		result= Minimaxalgo(board, key,  movinglist,depth,alpha,beta,maxplayer,whitemoves);
 		return result;
 	}
 
-	public  int[] MinimaxWhite(char[][] board, int key, ArrayList<Moves> movinglist,int depth,int alpha, int beta, boolean maxplayer) {
+	public  int[] Minimaxalgo(char[][] board, int key, ArrayList<Moves> movinglist,int depth,int alpha, int beta, boolean maxplayer,  boolean whitemoves) {
 		minimaxiteration++;
 		int[] result=new int[] {0,0};
 		depth0=false;
-		if(depth==0) {
+		if(depth==0||boardChecker(board)!='-') {
 			depth0=true;
 			return new int[] {movinglist.get(movinglist.size()-1).getX(),movinglist.get(movinglist.size()-1).getY()};}
 		if(maxplayer) {
 			int maxEval=-1000000;
 			int WX=0;int WY=0;
-			for(int i=scaled[0];i<=scaled[2];i++) {
-				for(int j=scaled[1];j<=scaled[3];j++) {
-					if(board[i][j]!='B'&&board[i][j]!='W') {
-						board[i][j]='W';
-						key++;
-						movinglist.add(new Moves(i,j));
-						result=MinimaxWhite( board,  key, movinglist,depth-1,alpha,beta,false);
-						if(!depth0) {
-							board[result[0]][result[1]]='B';
-							key++;
-							movinglist.add(new Moves(result[0],result[1]));	}
-						int whitevalue=evaluator(board, movinglist,2).getBoardEval();
-						int blackvalue=evaluator(board, movinglist,1).getBoardEval();
-						int diff = whitevalue-blackvalue;
-						if(!depth0) {
-							board[result[0]][result[1]]='-';
-							key--;
-							movinglist.remove(movinglist.size()-1);}
-						depth0=false;
-						if(maxEval<diff) {
-							maxEval=whitevalue-blackvalue;
-							WX=movinglist.get(movinglist.size()-1).getX();
-							WY=movinglist.get(movinglist.size()-1).getY();
-							
-//							if(bestpath.isEmpty()) {bestpath.add(new Moves(WX,WY,"W"));}
-//							else {bestpath.remove(bestpath.size()-1);
-//							bestpath.add(new Moves(WX,WY,"W"));}
-							
-							key--;
-							board[WX][WY]='-';
-							movinglist.remove(movinglist.size()-1);
-						}
-						else {
-							key--;
-							board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
-							movinglist.remove(movinglist.size()-1);
-						}
-						alpha = Math.max(alpha, diff);
-						if(beta <= alpha) {
-							break;
-						}
+			ArrayList<Moves> candidate = new ArrayList<Moves>();
+			candidate = SortedCandidate(movinglist,board);
+			for(int i=0;i<candidate.size();i++) {
+				if(whitemoves) {
+					board[candidate.get(i).getX()][candidate.get(i).getY()]='W';}
+				else {
+					board[candidate.get(i).getX()][candidate.get(i).getY()]='B';
+				}
+				key++;
+				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
+				result=Minimaxalgo( board,  key, movinglist,depth-1,alpha,beta,false,whitemoves);
+				if(!depth0) {
+					if(whitemoves) {
+						board[result[0]][result[1]]='B';}
+					else {board[result[0]][result[1]]='W';}
+					key++;
+					movinglist.add(new Moves(result[0],result[1]));	
+				}
+				int whitevalue=evaluator(board, movinglist,2).getBoardEval();
+				int blackvalue=evaluator(board, movinglist,1).getBoardEval();
+				int diff;
+				if(whitemoves) {
+					diff = whitevalue-blackvalue;}
+				else {diff = blackvalue - whitevalue;}
+				if(!depth0) {
+					board[result[0]][result[1]]='-';
+					key--;
+					movinglist.remove(movinglist.size()-1);
+				}
+				depth0=false;
+				if(maxEval<diff) {
+					WX=movinglist.get(movinglist.size()-1).getX();
+					WY=movinglist.get(movinglist.size()-1).getY();
+					if(whitemoves) {
+						maxEval = whitevalue-blackvalue;
 					}
+					else {
+						maxEval = blackvalue - whitevalue;
+					}
+
+
+					//							if(bestpath.isEmpty()) {bestpath.add(new Moves(WX,WY,"W"));}
+					//							else {bestpath.remove(bestpath.size()-1);
+					//							bestpath.add(new Moves(WX,WY,"W"));}
+
+					key--;
+					board[WX][WY]='-';
+					movinglist.remove(movinglist.size()-1);
+				}
+				else {
+					key--;
+					board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+					movinglist.remove(movinglist.size()-1);
+				}
+				alpha = Math.max(alpha, diff);
+				if(beta <= alpha) {
+					break;
 				}
 			}
 			depth0=false;
@@ -248,48 +269,63 @@ public class Back_End {
 		else {
 			int minEval=1000000;
 			int BX=0;int BY=0;			
-			for(int i=scaled[0];i<=scaled[2];i++) {
-				for(int j=scaled[1];j<=scaled[3];j++) {
-					if(board[i][j]!='B'&&board[i][j]!='W') {
-						board[i][j]='B';
-						key++;
-						movinglist.add(new Moves(i,j));
-						result=MinimaxWhite( board,  key, movinglist,depth-1,alpha,beta,true);
-						if(!depth0) {
-							board[result[0]][result[1]]='W';
-							key++;
-							movinglist.add(new Moves(result[0],result[1]));	}
-						int whitevalue=evaluator(board, movinglist,2).getBoardEval();
-						int blackvalue=evaluator(board, movinglist,1).getBoardEval();
-						int diff = whitevalue-blackvalue;
-						if(!depth0) {
-							board[result[0]][result[1]]='-';
-							key--;
-							movinglist.remove(movinglist.size()-1);}
-						depth0=false;
-						if(minEval>diff) {
-							minEval=whitevalue-blackvalue;
-							BX=movinglist.get(movinglist.size()-1).getX();
-							BY=movinglist.get(movinglist.size()-1).getY();
-							
-//							if(bestpath.size()==1) {bestpath.add(new Moves(BX,BY,"B"));}
-//							else if(bestpath.size()>=1) {bestpath.remove(bestpath.size()-1);
-//							bestpath.add(new Moves(BX,BY,"B"));}
-							
-							key--;
-							board[BX][BY]='-';
-							movinglist.remove(movinglist.size()-1);
-						}
-						else {
-							key--;
-							board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
-							movinglist.remove(movinglist.size()-1);
-						}
-						beta = Math.min(beta, diff);
-						if(beta <= alpha) {
-						break;
-						}
+			ArrayList<Moves> candidate = new ArrayList<Moves>();
+			candidate = SortedCandidate(movinglist,board);
+			for(int i=0;i<candidate.size();i++) {
+				if(whitemoves) {
+					board[candidate.get(i).getX()][candidate.get(i).getY()]='B';}
+				else {
+					board[candidate.get(i).getX()][candidate.get(i).getY()]='W';
+				}
+				key++;
+				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
+				result=Minimaxalgo( board,  key, movinglist,depth-1,alpha,beta,true,whitemoves);
+				if(!depth0) {
+					if(whitemoves) {
+						board[result[0]][result[1]]='W';}
+					else {
+						board[result[0]][result[1]]='B';
 					}
+					key++;
+					movinglist.add(new Moves(result[0],result[1]));	}
+				int whitevalue=evaluator(board, movinglist,2).getBoardEval();
+				int blackvalue=evaluator(board, movinglist,1).getBoardEval();
+				int diff;
+				if(whitemoves) {
+					diff = whitevalue-blackvalue;}
+				else {diff =blackvalue- whitevalue;}
+				if(!depth0) {
+					board[result[0]][result[1]]='-';
+					key--;
+					movinglist.remove(movinglist.size()-1);
+				}
+				depth0=false;
+				if(minEval>diff) {
+					BX=movinglist.get(movinglist.size()-1).getX();
+					BY=movinglist.get(movinglist.size()-1).getY();
+					if(whitemoves) {
+						minEval = whitevalue-blackvalue;
+					}
+					else {
+						minEval =blackvalue- whitevalue;
+					}
+
+					//							if(bestpath.size()==1) {bestpath.add(new Moves(BX,BY,"B"));}
+					//							else if(bestpath.size()>=1) {bestpath.remove(bestpath.size()-1);
+					//							bestpath.add(new Moves(BX,BY,"B"));}
+
+					key--;
+					board[BX][BY]='-';
+					movinglist.remove(movinglist.size()-1);
+				}
+				else {
+					key--;
+					board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+					movinglist.remove(movinglist.size()-1);
+				}
+				beta = Math.min(beta, diff);
+				if(beta <= alpha) {
+					break;
 				}
 			}
 			depth0=false;
@@ -307,92 +343,201 @@ public class Back_End {
 		if(maxplayer) {
 			int maxEval=-1000000;
 			int BY=0;int BX=0;
-			for(int i=scaled[0];i<=scaled[2];i++) {
-				for(int j=scaled[1];j<=scaled[3];j++) {
-					if(board[i][j]!='B'&&board[i][j]!='W') {
-						board[i][j]='B';
-						key++;
-						movinglist.add(new Moves(i,j));
-						result=MinimaxBlack( board,  key, movinglist,depth-1,alpha,beta,false);
-						if(!depth0) {
-							board[result[0]][result[1]]='W';
-							key++;
-							movinglist.add(new Moves(result[0],result[1]));}
-						int whitevalue=evaluator(board, movinglist,2).getBoardEval();
-						int blackvalue=evaluator(board, movinglist,1).getBoardEval();
-						int diff = blackvalue-whitevalue;
-						if(!depth0) {
-							board[result[0]][result[1]]='-';
-							key--;
-							movinglist.remove(movinglist.size()-1);}
-						depth0=false;
-						if(maxEval<diff) {
-							maxEval=blackvalue-whitevalue;
-							BX=movinglist.get(movinglist.size()-1).getX();
-							BY=movinglist.get(movinglist.size()-1).getY();
-							key--;
-							board[BX][BY]='-';
-							movinglist.remove(movinglist.size()-1);
-						}
-						else {
-							key--;
-							board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
-							movinglist.remove(movinglist.size()-1);
-						}
-						alpha = Math.max(alpha, diff);
-						if(beta <= alpha) {
-							break;
-						}
-					}
+			ArrayList<Moves> candidate = new ArrayList<Moves>();
+			candidate = SortedCandidate(movinglist,board);
+			for(int i=0;i<candidate.size();i++) {
+				board[candidate.get(i).getX()][candidate.get(i).getY()]='B';
+				key++;
+				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
+				result=MinimaxBlack( board,  key, movinglist,depth-1,alpha,beta,false);
+				if(!depth0) {
+					board[result[0]][result[1]]='W';
+					key++;
+					movinglist.add(new Moves(result[0],result[1]));}
+				int whitevalue=evaluator(board, movinglist,2).getBoardEval();
+				int blackvalue=evaluator(board, movinglist,1).getBoardEval();
+				int diff = blackvalue-whitevalue;
+				if(!depth0) {
+					board[result[0]][result[1]]='-';
+					key--;
+					movinglist.remove(movinglist.size()-1);}
+				depth0=false;
+				if(maxEval<diff) {
+					maxEval=blackvalue-whitevalue;
+					BX=movinglist.get(movinglist.size()-1).getX();
+					BY=movinglist.get(movinglist.size()-1).getY();
+					key--;
+					board[BX][BY]='-';
+					movinglist.remove(movinglist.size()-1);
+				}
+				else {
+					key--;
+					board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+					movinglist.remove(movinglist.size()-1);
+				}
+				alpha = Math.max(alpha, diff);
+				if(beta <= alpha) {
+					break;
 				}
 			}
+
+
 			depth0=false;
 			return new int[] {BX,BY};
 		}
 		else {
 			int minEval=1000000;
 			int WY=0;int WX=0;
-			for(int i=scaled[0];i<=scaled[2];i++) {
-				for(int j=scaled[1];j<=scaled[3];j++) {
-					if(board[i][j]!='B'&&board[i][j]!='W') {
-						board[i][j]='W';
-						key++;
-						movinglist.add(new Moves(i,j));
-						result=MinimaxBlack( board,  key, movinglist,depth-1,alpha, beta,true);
-						if(!depth0) {
-							board[result[0]][result[1]]='B';
-							key++;
-							movinglist.add(new Moves(result[0],result[1]));}
-						int whitevalue=evaluator(board, movinglist,2).getBoardEval();
-						int blackvalue=evaluator(board, movinglist,1).getBoardEval();
-						int diff = blackvalue-whitevalue;
-						if(!depth0) {
-							board[result[0]][result[1]]='-';
-							key--;
-							movinglist.remove(movinglist.size()-1);}
-						depth0=false;
-						if(minEval>diff) {	
-							minEval=blackvalue-whitevalue;
-							WX=movinglist.get(movinglist.size()-1).getX();
-							WY=movinglist.get(movinglist.size()-1).getY();
-							key--;
-							board[WX][WY]='-';
-							movinglist.remove(movinglist.size()-1);
-						}
-						else {
-							key--;
-							board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
-							movinglist.remove(movinglist.size()-1);
-						}
-						beta = Math.min(beta, diff);
-						if(beta <= alpha) {
-							break;
-						}
-					}
+			ArrayList<Moves> candidate = new ArrayList<Moves>();
+			candidate = SortedCandidate(movinglist,board);
+			for(int i=0;i<candidate.size();i++) {
+				board[candidate.get(i).getX()][candidate.get(i).getY()]='W';
+				key++;
+				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
+				result=MinimaxBlack( board,  key, movinglist,depth-1,alpha, beta,true);
+				if(!depth0) {
+					board[result[0]][result[1]]='B';
+					key++;
+					movinglist.add(new Moves(result[0],result[1]));}
+				int whitevalue=evaluator(board, movinglist,2).getBoardEval();
+				int blackvalue=evaluator(board, movinglist,1).getBoardEval();
+				int diff = blackvalue-whitevalue;
+				if(!depth0) {
+					board[result[0]][result[1]]='-';
+					key--;
+					movinglist.remove(movinglist.size()-1);}
+				depth0=false;
+				if(minEval>diff) {	
+					minEval=blackvalue-whitevalue;
+					WX=movinglist.get(movinglist.size()-1).getX();
+					WY=movinglist.get(movinglist.size()-1).getY();
+					key--;
+					board[WX][WY]='-';
+					movinglist.remove(movinglist.size()-1);
+				}
+				else {
+					key--;
+					board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+					movinglist.remove(movinglist.size()-1);
+				}
+				beta = Math.min(beta, diff);
+				if(beta <= alpha) {
+					break;
 				}
 			}
+
+
 			depth0=false;
 			return new int[] {WX,WY};
+		}
+	}
+
+	public  int[] MinimaxWhite(char[][] board, int key, ArrayList<Moves> movinglist,int depth,int alpha, int beta, boolean maxplayer) {
+		minimaxiteration++;
+		int[] result=new int[] {0,0};
+		depth0=false;
+		if(depth==0) {
+			depth0=true;
+			return new int[] {movinglist.get(movinglist.size()-1).getX(),movinglist.get(movinglist.size()-1).getY()};}
+		if(maxplayer) {
+			int maxEval=-1000000;
+			int WX=0;int WY=0;
+			ArrayList<Moves> candidate = new ArrayList<Moves>();
+			candidate = SortedCandidate(movinglist,board);
+			for(int i=0;i<candidate.size();i++) {
+				board[candidate.get(i).getX()][candidate.get(i).getY()]='W';
+				key++;
+				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
+				result=MinimaxWhite( board,  key, movinglist,depth-1,alpha,beta,false);
+				if(!depth0) {
+					board[result[0]][result[1]]='B';
+					key++;
+					movinglist.add(new Moves(result[0],result[1]));	}
+				int whitevalue=evaluator(board, movinglist,2).getBoardEval();
+				int blackvalue=evaluator(board, movinglist,1).getBoardEval();
+				int diff = whitevalue-blackvalue;
+				if(!depth0) {
+					board[result[0]][result[1]]='-';
+					key--;
+					movinglist.remove(movinglist.size()-1);}
+				depth0=false;
+				if(maxEval<diff) {
+					maxEval=whitevalue-blackvalue;
+					WX=movinglist.get(movinglist.size()-1).getX();
+					WY=movinglist.get(movinglist.size()-1).getY();
+
+					//							if(bestpath.isEmpty()) {bestpath.add(new Moves(WX,WY,"W"));}
+					//							else {bestpath.remove(bestpath.size()-1);
+					//							bestpath.add(new Moves(WX,WY,"W"));}
+
+					key--;
+					board[WX][WY]='-';
+					movinglist.remove(movinglist.size()-1);
+				}
+				else {
+					key--;
+					board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+					movinglist.remove(movinglist.size()-1);
+				}
+				alpha = Math.max(alpha, diff);
+				if(beta <= alpha) {
+					break;
+				}
+			}
+
+
+			depth0=false;
+			return new int[] {WX,WY};
+		}
+		else {
+			int minEval=1000000;
+			int BX=0;int BY=0;			
+			ArrayList<Moves> candidate = new ArrayList<Moves>();
+			candidate = SortedCandidate(movinglist,board);
+			for(int i=0;i<candidate.size();i++) {
+				board[candidate.get(i).getX()][candidate.get(i).getY()]='B';
+				key++;
+				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
+				result=MinimaxWhite( board,  key, movinglist,depth-1,alpha,beta,true);
+				if(!depth0) {
+					board[result[0]][result[1]]='W';
+					key++;
+					movinglist.add(new Moves(result[0],result[1]));	}
+				int whitevalue=evaluator(board, movinglist,2).getBoardEval();
+				int blackvalue=evaluator(board, movinglist,1).getBoardEval();
+				int diff = whitevalue-blackvalue;
+				if(!depth0) {
+					board[result[0]][result[1]]='-';
+					key--;
+					movinglist.remove(movinglist.size()-1);}
+				depth0=false;
+				if(minEval>diff) {
+					minEval=whitevalue-blackvalue;
+					BX=movinglist.get(movinglist.size()-1).getX();
+					BY=movinglist.get(movinglist.size()-1).getY();
+
+					//							if(bestpath.size()==1) {bestpath.add(new Moves(BX,BY,"B"));}
+					//							else if(bestpath.size()>=1) {bestpath.remove(bestpath.size()-1);
+					//							bestpath.add(new Moves(BX,BY,"B"));}
+
+					key--;
+					board[BX][BY]='-';
+					movinglist.remove(movinglist.size()-1);
+				}
+				else {
+					key--;
+					board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+					movinglist.remove(movinglist.size()-1);
+				}
+				beta = Math.min(beta, diff);
+				if(beta <= alpha) {
+					break;
+				}
+			}
+
+
+			depth0=false;
+			return new int[] {BX,BY};
 		}
 	}
 
@@ -445,7 +590,7 @@ public class Back_End {
 					board[result[0]][result[1]]='-';
 					key--;
 					movinglist.remove(movinglist.size()-1);
-					
+
 				}
 				depth0=false;
 				if(maxEval<diff) {
