@@ -147,7 +147,7 @@ public class Gomoku_GUI {
 		if(pvp) {
 			damn=521;
 		}
-		modelabel=new JLabel(">>                        <<");
+		modelabel=new JLabel(">>                   <<");
 		modelabel.setForeground(Color.RED);
 		modelabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 15));
 		modelabel.setBounds(641 , damn, 150, 35);
@@ -1213,7 +1213,7 @@ public class Gomoku_GUI {
 					modelabel.remove(modelabel);
 					frame.getContentPane().remove(modelabel);
 					frame.getContentPane().repaint();
-					modelabel=new JLabel(">>                        <<");
+					modelabel=new JLabel(">>                   <<");
 					modelabel.setForeground(Color.RED);
 					modelabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 15));
 					modelabel.setBounds(641 , 521, 150, 35);
@@ -1263,7 +1263,7 @@ public class Gomoku_GUI {
 					modelabel.remove(modelabel);
 					frame.getContentPane().remove(modelabel);
 					frame.getContentPane().repaint();
-					modelabel=new JLabel(">>                        <<");
+					modelabel=new JLabel(">>                   <<");
 					modelabel.setForeground(Color.RED);
 					modelabel.setFont(new Font("Mongolian Baiti", Font.BOLD, 15));
 					modelabel.setBounds(641 , 575, 150, 35);
