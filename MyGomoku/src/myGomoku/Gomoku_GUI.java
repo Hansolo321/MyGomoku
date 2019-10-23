@@ -84,7 +84,7 @@ public class Gomoku_GUI {
 	private BoardState evaluresultW;
 	private String AIversion="Greedy";
 	public static int depth=2;
-	public static int Mydepth=6;
+	public static int Mydepth=4;
 	public String simuW="Greedy";
 	public String simuB="Minimax";
 	public boolean simuApply=false;
@@ -362,7 +362,6 @@ public class Gomoku_GUI {
 
 				if(!simuApply) {
 					Simulator_Menu SM = new Simulator_Menu();
-					SM.run();
 					SM.board=board;
 					SM.gameend=gameend;
 					SM.k=k;
@@ -371,6 +370,7 @@ public class Gomoku_GUI {
 					SM.White=simuW;
 					SM.Animation=Animation;
 					SM.AT1animation=AT1animation;
+					SM.run();
 					frame.dispose();
 				}
 
@@ -476,17 +476,17 @@ public class Gomoku_GUI {
 									Analysis1.append("White side Algo: "+simuW);
 									if(k%2!=0) {//black
 										starttime1 = System.nanoTime();
-										if(simuW=="MyAI") {
+										if(simuB=="MyAI") {
 											AI=backend.MyAI(board,k,movinglist,Mydepth,true);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
 											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
 										}
-										else if(simuW=="Greedy") {
+										else if(simuB=="Greedy") {
 											AI=backend.Greedy(board,k,movinglist);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
 											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
 										}
-										else if(simuW=="Minimax") {
+										else if(simuB=="Minimax") {
 											AI=backend.Minimax(board,k,movinglist,depth,true);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
 											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
@@ -505,17 +505,17 @@ public class Gomoku_GUI {
 									}
 									else {
 										starttime2 = System.nanoTime();
-										if(simuB=="MyAI") {
+										if(simuW=="MyAI") {
 											AI=backend.MyAI(board,k,movinglist,Mydepth,true);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
 											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
 										}
-										else if(simuB=="Greedy") {
+										else if(simuW=="Greedy") {
 											AI=backend.Greedy(board,k,movinglist);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
 											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
 										}
-										else if(simuB=="Minimax") {
+										else if(simuW=="Minimax") {
 											AI=backend.Minimax(board,k,movinglist,depth,true);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
 											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");

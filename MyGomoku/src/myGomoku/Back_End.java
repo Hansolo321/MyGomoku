@@ -16,6 +16,7 @@ public class Back_End {
 	private boolean depth0=false;
 	private int alpha=-1000000000;
 	private int beta = 1000000000;
+	private int AIdepth;
 	public ArrayList<Moves> bestpath = new ArrayList<Moves>();
 	private int mouseaccuracy=23;
 	public int minimaxiteration=0;
@@ -189,6 +190,7 @@ public class Back_End {
 		//					bestpath=new ArrayList<Moves>();
 		//					result=MinimaxBlack(board, key,  movinglist,depth,alpha,beta,maxplayer);
 		//				}
+		AIdepth = depth;
 		bestpath=new ArrayList<Moves>();
 		result= Minimaxalgo(board, key,  movinglist,depth,alpha,beta,maxplayer,whitemoves);
 		return result;
@@ -543,6 +545,7 @@ public class Back_End {
 
 	public  int[] MyAI(char[][] board, int key, ArrayList<Moves> movinglist,int depth,boolean maxplayer) {
 		int[] result=new int[] {1,1};
+		AIdepth = depth;
 		boolean whitemoves = false;
 		if(key%2==0) {whitemoves=true;}
 		else {whitemoves=false;}
@@ -556,7 +559,7 @@ public class Back_End {
 		myaiiteration++;
 		int[] result=new int[] {0,0};
 		depth0=false;
-		if(depth==0) {
+		if(depth==0||boardChecker(board)!='-') {
 			depth0=true;
 			return new int[] {movinglist.get(movinglist.size()-1).getX(),movinglist.get(movinglist.size()-1).getY()};}
 		if(maxplayer) {
@@ -571,6 +574,7 @@ public class Back_End {
 					board[candidate.get(i).getX()][candidate.get(i).getY()]='B';
 				}
 				key++;
+				Moves a = new Moves(candidate.get(i).getX(),candidate.get(i).getY());
 				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
 				result=Myalgo( board,  key, movinglist,depth-1,alpha,beta,false,whitemoves);
 				if(!depth0) {
@@ -590,18 +594,28 @@ public class Back_End {
 					board[result[0]][result[1]]='-';
 					key--;
 					movinglist.remove(movinglist.size()-1);
-
 				}
 				depth0=false;
 				if(maxEval<diff) {
-					if(whitemoves) {
-						maxEval=whitevalue-blackvalue;}
+					if(whitemoves) {maxEval=whitevalue-blackvalue;}
 					else {maxEval=blackvalue-whitevalue;}
 					WX=movinglist.get(movinglist.size()-1).getX();
 					WY=movinglist.get(movinglist.size()-1).getY();
 					key--;
 					board[WX][WY]='-';
 					movinglist.remove(movinglist.size()-1);
+//					if(!whitemoves&&whitevalue>=300&&depth!=AIdepth){
+//						return new int[] {WX,WY};
+//					}
+//					else if(whitemoves&&blackvalue>=300&&depth!=AIdepth){
+//						return new int[] {WX,WY};
+//					}
+					if(whitemoves&&blackvalue>=10000&&depth!=AIdepth){
+						return new int[] {WX,WY};
+					}
+					else if(!whitemoves&&whitevalue>=10000&&depth!=AIdepth){
+						return new int[] {WX,WY};
+					}
 					//bestpath.remove(bestpath.size()-1);
 				}
 				else {
@@ -652,14 +666,25 @@ public class Back_End {
 				}
 				depth0=false;
 				if(minEval>diff) {
-					if(whitemoves) {
-						minEval=whitevalue-blackvalue;}
+					if(whitemoves) {minEval=whitevalue-blackvalue;}
 					else {minEval=blackvalue-whitevalue;}
 					BX=movinglist.get(movinglist.size()-1).getX();
 					BY=movinglist.get(movinglist.size()-1).getY();
 					key--;
 					board[BX][BY]='-';
 					movinglist.remove(movinglist.size()-1);
+//					if(!whitemoves&&whitevalue>=300&&depth!=AIdepth){
+//						return new int[] {BX,BY};
+//					}
+//					else if(whitemoves&&blackvalue>=300&&depth!=AIdepth){
+//						return new int[] {BX,BY};
+//					}
+					if(whitemoves&&blackvalue>=10000&&depth!=AIdepth){
+						return new int[] {BX,BY};
+					}
+					else if(!whitemoves&&whitevalue>=10000&&depth!=AIdepth){
+						return new int[] {BX,BY};
+					}
 					//bestpath.remove(bestpath.size()-1);
 				}
 				else {

@@ -210,8 +210,8 @@ public class Simulator_Menu implements Runnable{
 				gui.movinglist=movinglist;
 				gui.Animation=Animation;
 				gui.AT1animation=AT1animation;
-				gui.frame.setVisible(true);
 				gui.gameend=gameend;
+				gui.frame.setVisible(true);
 				if (gameend) {
 					gui.gameend=false;
 					gui.k=1;
@@ -223,7 +223,6 @@ public class Simulator_Menu implements Runnable{
 					}
 				}
 				gui.btnsimulate.doClick();
-				
 			}
 		});
 		ApllyButton.setFont(new Font("Times New Roman", Font.BOLD, 18));

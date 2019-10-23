@@ -86,15 +86,16 @@ public class BoardState {
 	public int getBoardEval() {
 		boardEval=0;
 		if(FiveInrow.size()!=0) {boardEval+=100000;}
-		if((Livefour.size()==1)||(Deadfour.size()==2)||(Deadfour.size()==1&&Livethree.size()==1)||(JDeadfour.size()==2)||(JDeadfour.size()==1&&Livethree.size()==1)) {boardEval+=10000;}
+		if(Livefour.size()==1){boardEval+=15000;}
+		if((Livethree.size()==2)||(Deadfour.size()==2)||(Deadfour.size()==1&&Livethree.size()==1)||(JDeadfour.size()==2)||(JDeadfour.size()==1&&Livethree.size()==1)) {boardEval+=10000;}
 		if((Deadfour.size()==1&&JLivethree.size()==1)||(JDeadfour.size()==1&&JLivethree.size()==1)) {boardEval+=10000;}
 		if(Livethree.size()+JLivethree.size()==2) {boardEval+=5000;}
-		if(Deadthree.size()==1&&((Livethree.size()==1)||(JLivethree.size()==1))) {boardEval+=1000;}
+	//	if(Deadthree.size()==1&&((Livethree.size()==1)||(JLivethree.size()==1))) {boardEval+=1000;}
 		if(Deadfour.size()!=0) {boardEval+=500;}
 		if(JDeadfour.size()!=0) {boardEval+=300;}
-		if(CDeadfour.size()!=0) {boardEval+=(CDeadfour.size()*100);}
-		if(Livethree.size()!=0) {boardEval+=100;}
-		if(JLivethree.size()!=0) {boardEval+=90;}
+		if(CDeadfour.size()!=0) {boardEval+=(CDeadfour.size()*50);}
+		if(Livethree.size()!=0) {boardEval+=50;}
+		if(JLivethree.size()!=0) {boardEval+=40;}
 		if(Deadthree.size()!=0) {boardEval+=(5*Deadthree.size());}
 		if(Livetwo.size()!=0) {boardEval+=(Livetwo.size()*5);}
 		if(Deadtwo.size()!=0) {boardEval+=2*Deadtwo.size();}
