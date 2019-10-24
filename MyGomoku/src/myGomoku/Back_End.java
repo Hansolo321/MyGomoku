@@ -576,6 +576,25 @@ public class Back_End {
 				key++;
 				Moves a = new Moves(candidate.get(i).getX(),candidate.get(i).getY());
 				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
+				int m = evaluator(board, movinglist,1).CountLivefour();
+				int n = evaluator(board, movinglist,2).CountLivefour();
+				if(!whitemoves&&m>=1&&depth!=AIdepth){
+					WX=movinglist.get(movinglist.size()-1).getX();
+					WY=movinglist.get(movinglist.size()-1).getY();
+					key--;
+					board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+					movinglist.remove(movinglist.size()-1);
+					return new int[] {WX,WY};
+				}
+				else if(whitemoves&&n>=1&&depth!=AIdepth){
+					WX=movinglist.get(movinglist.size()-1).getX();
+					WY=movinglist.get(movinglist.size()-1).getY();
+					key--;
+					board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+					movinglist.remove(movinglist.size()-1);
+					return new int[] {WX,WY};
+				}
+
 				result=Myalgo( board,  key, movinglist,depth-1,alpha,beta,false,whitemoves);
 				if(!depth0) {
 					if(whitemoves) {
@@ -584,6 +603,8 @@ public class Back_End {
 					key++;
 					movinglist.add(new Moves(result[0],result[1]));	
 				}
+				m = evaluator(board, movinglist,1).Countfour();
+				n = evaluator(board, movinglist,2).Countfour();
 				int whitevalue=evaluator(board, movinglist,2).getBoardEval();
 				int blackvalue=evaluator(board, movinglist,1).getBoardEval();
 				int diff;
@@ -596,6 +617,7 @@ public class Back_End {
 					movinglist.remove(movinglist.size()-1);
 				}
 				depth0=false;
+
 				if(maxEval<diff) {
 					if(whitemoves) {maxEval=whitevalue-blackvalue;}
 					else {maxEval=blackvalue-whitevalue;}
@@ -604,18 +626,15 @@ public class Back_End {
 					key--;
 					board[WX][WY]='-';
 					movinglist.remove(movinglist.size()-1);
-//					if(!whitemoves&&whitevalue>=300&&depth!=AIdepth){
+				
+//					if(!whitemoves&&m>=1&&depth!=AIdepth){
+//						
 //						return new int[] {WX,WY};
 //					}
-//					else if(whitemoves&&blackvalue>=300&&depth!=AIdepth){
+//					else if(whitemoves&&n>=1&&depth!=AIdepth){
+//						
 //						return new int[] {WX,WY};
 //					}
-					if(whitemoves&&blackvalue>=10000&&depth!=AIdepth){
-						return new int[] {WX,WY};
-					}
-					else if(!whitemoves&&whitevalue>=10000&&depth!=AIdepth){
-						return new int[] {WX,WY};
-					}
 					//bestpath.remove(bestpath.size()-1);
 				}
 				else {
@@ -644,7 +663,27 @@ public class Back_End {
 					board[candidate.get(i).getX()][candidate.get(i).getY()]='W';
 				}
 				key++;
+				Moves b = new Moves(candidate.get(i).getX(),candidate.get(i).getY());
 				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
+
+				int m = evaluator(board, movinglist,1).CountLivefour();
+				int n = evaluator(board, movinglist,2).CountLivefour();
+				if(whitemoves&&m>=1&&depth!=AIdepth){
+					BX=movinglist.get(movinglist.size()-1).getX();
+					BY=movinglist.get(movinglist.size()-1).getY();
+					key--;
+					board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+					movinglist.remove(movinglist.size()-1);
+					return new int[] {BX,BY};
+				}
+				else if(!whitemoves&&n>=1&&depth!=AIdepth){
+					BX=movinglist.get(movinglist.size()-1).getX();
+					BY=movinglist.get(movinglist.size()-1).getY();
+					key--;
+					board[movinglist.get(movinglist.size()-1).getX()][movinglist.get(movinglist.size()-1).getY()]='-';
+					movinglist.remove(movinglist.size()-1);
+					return new int[] {BX,BY};
+				}
 				result=Myalgo( board,  key, movinglist,depth-1,alpha,beta,true,whitemoves);
 				if(!depth0) {
 					if(whitemoves) {
@@ -653,6 +692,8 @@ public class Back_End {
 					key++;
 					movinglist.add(new Moves(result[0],result[1]));	
 				}
+				m = evaluator(board, movinglist,1).Countfour();
+				n = evaluator(board, movinglist,2).Countfour();
 				int whitevalue=evaluator(board, movinglist,2).getBoardEval();
 				int blackvalue=evaluator(board, movinglist,1).getBoardEval();
 				int diff;
@@ -665,6 +706,7 @@ public class Back_End {
 					movinglist.remove(movinglist.size()-1);
 				}
 				depth0=false;
+			
 				if(minEval>diff) {
 					if(whitemoves) {minEval=whitevalue-blackvalue;}
 					else {minEval=blackvalue-whitevalue;}
@@ -673,18 +715,15 @@ public class Back_End {
 					key--;
 					board[BX][BY]='-';
 					movinglist.remove(movinglist.size()-1);
-//					if(!whitemoves&&whitevalue>=300&&depth!=AIdepth){
+			
+//					if(whitemoves&&m>=1&&depth!=AIdepth){
+//					
 //						return new int[] {BX,BY};
 //					}
-//					else if(whitemoves&&blackvalue>=300&&depth!=AIdepth){
+//					else if(!whitemoves&&n>=1&&depth!=AIdepth){
+//						
 //						return new int[] {BX,BY};
 //					}
-					if(whitemoves&&blackvalue>=10000&&depth!=AIdepth){
-						return new int[] {BX,BY};
-					}
-					else if(!whitemoves&&whitevalue>=10000&&depth!=AIdepth){
-						return new int[] {BX,BY};
-					}
 					//bestpath.remove(bestpath.size()-1);
 				}
 				else {
