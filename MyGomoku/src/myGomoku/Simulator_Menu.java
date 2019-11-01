@@ -8,12 +8,14 @@ package myGomoku;
 import javax.swing.JFrame;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -55,7 +57,7 @@ public class Simulator_Menu implements Runnable{
 	public void run() {
 		frame.setVisible(true);	
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 550, 300);
+		frame.setBounds(100, 100, 706, 360);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		ImageIcon beam=null;
@@ -63,8 +65,7 @@ public class Simulator_Menu implements Runnable{
 		Image icon=beam.getImage();
 		frame.setIconImage(icon);
 		frame.setLocationRelativeTo(null);
-
-
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Simulator Menu");
 
@@ -75,10 +76,9 @@ public class Simulator_Menu implements Runnable{
 		Image icon2=beam2.getImage();
 		JLabel background = new JLabel(new ImageIcon(icon2));
 		frame.setContentPane(background);
-		
-		
+	
 		////////////////////////////
-frame.setBounds(100, 100, 706, 361);
+
 		
 		JLabel deptylable = new JLabel("Depth");
 		deptylable.setFont(new Font("Times New Roman", Font.BOLD, 17));
@@ -134,10 +134,15 @@ frame.setBounds(100, 100, 706, 361);
 				if(!candidatecheck1.isSelected()) {
 					range1.setEditable(false);
 					range1.setText("");
+					frame.remove(range1);
+					frame.repaint();
 				}
 				else {
 					range1.setEditable(true);
-					range2.setText("1");
+					range1.setText("1");
+					range1.setBounds(625, 100, 30, 20);
+					frame.getContentPane().add(range1);
+					frame.repaint();
 				}
 			}
 		});
@@ -151,10 +156,15 @@ frame.setBounds(100, 100, 706, 361);
 				if(!candidatecheck2.isSelected()) {
 					range2.setEditable(false);
 					range2.setText("");
+					frame.remove(range2);
+					frame.repaint();
 				}
 				else {
 					range2.setEditable(true);
 					range2.setText("1");
+					range2.setBounds(625, 145, 30, 20);
+					frame.getContentPane().add(range2);
+					frame.repaint();
 				}
 			}
 		});
@@ -417,7 +427,28 @@ frame.setBounds(100, 100, 706, 361);
 		Cancelbtn.setBounds(91, 250, 149, 33);
 		frame.getContentPane().add(Cancelbtn);
 		
+		JPanel sepLine1 = new JPanel() {	   
+			private static final long serialVersionUID = 1L;
+			@Override
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.setColor(Color.RED);
+				g.drawLine(0, 0, 320, 0);
+				g.drawLine(0, 0, 0, 110);
+				g.drawLine(0, 109, 320, 109);
+				g.drawLine(319, 0, 319, 109);
+				
+				g.drawLine(0, 1, 320, 1);
+				g.drawLine(1, 0, 1, 110);
+				g.drawLine(0, 108, 320, 108);
+				g.drawLine(318, 0, 318, 109);
 
+
+			}
+		};
+		sepLine1.setBounds(355, 70, 320, 110);
+		frame.getContentPane().add(sepLine1);
+	
 	}
 	
 }
