@@ -7,6 +7,7 @@ import java.util.Comparator;
  * This is the project for creative component in ISU
  * This class include the constructor of Moves
  */
+
 public class Moves {
 	private int index;
 	private int Xposition;

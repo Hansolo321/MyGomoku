@@ -1,4 +1,5 @@
 package myGomoku;
+
 /*
  * Author: Han Liao (lhan@iastate.edu or leslieileo@gmail.com)
  * This is the project for creative component in ISU
@@ -320,7 +321,6 @@ public class Gomoku_GUI {
 		btnNewGame = new JButton("New Game");
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
 				TM1.stop();
 				TM.stop();
 				AT1animation=false;
@@ -408,7 +408,6 @@ public class Gomoku_GUI {
 					if(gameend) {
 						btnstop.doClick();
 						TM.stop();
-						//simuApply=false;
 						AT1animation=false;
 						BoardPanel.repaint();
 						Analysis1.setForeground(Color.RED);
@@ -608,9 +607,7 @@ public class Gomoku_GUI {
 						}
 					}
 				}
-
-
-			}
+}
 		};
 		btnsimulate.addActionListener(FkU);
 		btnsimulate.setBackground(new Color(255,215,0));
@@ -812,7 +809,6 @@ public class Gomoku_GUI {
 				for(int i=0;i<Candidate.size();i++) {
 					Analysis.append(Candidate.get(i).PercentageToString());
 				}
-
 
 				//////////////////////////////////////TEST AREA//////////////////////////////////////
 			}
@@ -1174,6 +1170,7 @@ public class Gomoku_GUI {
 		JButton btnInput = new JButton("INPUT FILE");
 		btnInput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Analysis.setForeground(Color.BLACK);
 				TM.stop();
 				AT1animation=false;
 				readfile=true;
@@ -1201,6 +1198,7 @@ public class Gomoku_GUI {
 						e.printStackTrace();
 					}
 					k=1;
+					try {
 					scr.nextLine();scr.nextLine();scr.nextLine();
 					while(scr.hasNext()) {
 						String a=scr.nextLine();
@@ -1218,6 +1216,11 @@ public class Gomoku_GUI {
 							k++;
 						}
 						scr.nextLine();
+					}
+					}
+					catch (Exception e){
+						Analysis.setText("\n\n\n\n\n\nPlease import correct formatting 'txt' file.\n\nCheck 'Help' for more info.");
+						Analysis.setForeground(Color.RED);
 					}
 					endCheck();
 					BoardPanel.revalidate();
@@ -1615,15 +1618,6 @@ public class Gomoku_GUI {
 		}
 		if(pvp) {Analysis.append("Mode: PvP!\n");}
 		else {Analysis.append("Mode: PvAI. Algorithem: "+AIversion+"\n");}
-		//		Analysis.append("Board state:\n");
-		//		for(int c=0;c<15;c++) {
-		//			for(int r=0;r<15;r++) {
-		//				Analysis.append(String.valueOf(board[r][c])+"  ");
-		//				if(r==14) {
-		//					Analysis.append("\n");
-		//				}
-		//			}
-		//		}
 		Analysis.setCaretPosition(0);
 	}
 }

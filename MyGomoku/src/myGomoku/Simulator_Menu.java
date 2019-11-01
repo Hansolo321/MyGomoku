@@ -1,4 +1,5 @@
 package myGomoku;
+
 /*
  * Author: Han Liao (lhan@iastate.edu or leslieileo@gmail.com)
  * This is the project for creative component in ISU
@@ -58,33 +59,30 @@ public class Simulator_Menu implements Runnable{
 		frame.setVisible(true);	
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 706, 360);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		ImageIcon beam=null;
 		beam = new ImageIcon(this.getClass().getClassLoader().getResource("GomokuIcon.png"));
 		Image icon=beam.getImage();
 		frame.setIconImage(icon);
 		frame.setLocationRelativeTo(null);
-		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Simulator Menu");
-
-		frame.getContentPane().setBackground(new Color(255,250,240));
 		ImageIcon beam2=null;
 		beam2 = new ImageIcon(this.getClass().getClassLoader().getResource("menu-background.jpg"));
 		//beam2 = new ImageIcon(this.getClass().getClassLoader().getResource("Ocean.jpg"));
 		Image icon2=beam2.getImage();
 		JLabel background = new JLabel(new ImageIcon(icon2));
 		frame.setContentPane(background);
-	
-		////////////////////////////
 
-		
+		////////////////////////////
+		/*
+		 * parameter setting for myAI
+		 */
+
 		JLabel deptylable = new JLabel("Depth");
 		deptylable.setFont(new Font("Times New Roman", Font.BOLD, 17));
 		deptylable.setBounds(455, 75, 50, 20);
 		frame.getContentPane().add(deptylable);
-		
+
 		JTextArea depty1 = new JTextArea();
 		depty1.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
 		depty1.setBounds(460, 100, 30, 20);
@@ -93,7 +91,7 @@ public class Simulator_Menu implements Runnable{
 		depty1.setLineWrap(true);
 		depty1.setWrapStyleWord(true);
 		frame.setLocationRelativeTo ( null );
-		
+
 		JTextArea depty2 = new JTextArea();
 		depty2.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
 		depty2.setBounds(460, 145, 30, 20);
@@ -102,14 +100,12 @@ public class Simulator_Menu implements Runnable{
 		depty2.setLineWrap(true);
 		depty2.setWrapStyleWord(true);
 		frame.setLocationRelativeTo ( null );
-		
+
 		JLabel candidatelable1 = new JLabel("Candidate & Range");
 		candidatelable1.setFont(new Font("Times New Roman", Font.BOLD, 17));
 		candidatelable1.setBounds(520, 75, 150, 20);
 		frame.getContentPane().add(candidatelable1);
 
-	
-		
 		JTextArea range1 = new JTextArea();
 		range1.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
 		range1.setBounds(625, 100, 30, 20);
@@ -118,7 +114,7 @@ public class Simulator_Menu implements Runnable{
 		range1.setLineWrap(true);
 		range1.setWrapStyleWord(true);
 		frame.setLocationRelativeTo ( null );
-		
+
 		JTextArea range2 = new JTextArea();
 		range2.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
 		range2.setBounds(625, 145, 30, 20);
@@ -127,7 +123,7 @@ public class Simulator_Menu implements Runnable{
 		range2.setLineWrap(true);
 		range2.setWrapStyleWord(true);
 		frame.setLocationRelativeTo ( null );
-		
+
 		JCheckBox candidatecheck1 = new JCheckBox("");
 		candidatecheck1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -149,7 +145,7 @@ public class Simulator_Menu implements Runnable{
 		candidatecheck1.setBounds(540, 100, 20, 20);
 		candidatecheck1.setSelected(true);
 		frame.getContentPane().add(candidatecheck1);
-		
+
 		JCheckBox candidatecheck2 = new JCheckBox("");
 		candidatecheck2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -171,12 +167,12 @@ public class Simulator_Menu implements Runnable{
 		candidatecheck2.setBounds(540, 145, 20, 20);
 		candidatecheck2.setSelected(true);
 		frame.getContentPane().add(candidatecheck2);
-		
+
 		JLabel reportlable1 = new JLabel("Report file name:");
 		reportlable1.setFont(new Font("Times New Roman", Font.BOLD, 17));
 		reportlable1.setBounds(10, 200, 130, 20);
 		frame.getContentPane().add(reportlable1);
-		
+
 		JTextArea reportarea = new JTextArea();
 		reportarea.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
 		reportarea.setBounds(150, 200, 200, 20);
@@ -188,12 +184,12 @@ public class Simulator_Menu implements Runnable{
 		reportarea.setLineWrap(true);
 		reportarea.setWrapStyleWord(true);
 		frame.setLocationRelativeTo ( null );
-		
+
 		JLabel testlable = new JLabel("Test Number:");
 		testlable.setFont(new Font("Times New Roman", Font.BOLD, 17));
 		testlable.setBounds(400, 200, 130, 20);
 		frame.getContentPane().add(testlable);
-		
+
 		JTextArea testarea = new JTextArea();
 		testarea.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
 		testarea.setBounds(520, 200, 50, 20);
@@ -202,8 +198,7 @@ public class Simulator_Menu implements Runnable{
 		testarea.setLineWrap(true);
 		testarea.setWrapStyleWord(true);
 		frame.setLocationRelativeTo ( null );
-		
-		
+
 		//////////////////////////////////////////////
 
 		Intro=new JLabel("Choose the AI algorithm to be simulated:");
@@ -321,9 +316,6 @@ public class Simulator_Menu implements Runnable{
 		ApllyButton = new JButton("Apply&Start");
 		ApllyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
-				
 				if(GreedyB.isSelected()) {
 					Black="Greedy";
 				}
@@ -355,20 +347,20 @@ public class Simulator_Menu implements Runnable{
 					e1.printStackTrace();
 				}
 				BufferedWriter br = new BufferedWriter(fr);
-					try {
-						br.write(reportname+"\n");
-						br.write("Start Time: "+new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime())+"\n");
-					} catch (IOException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
+				try {
+					br.write(reportname+"\n");
+					br.write("Start Time: "+new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime())+"\n");
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 				try{
 					br.close();
 				}
 				catch(IOException e1){
 					e1.printStackTrace();
 				}
-				
+
 				frame.setVisible(false);
 				Gomoku_GUI gui = new Gomoku_GUI();	
 				gui.k=k;
@@ -401,7 +393,7 @@ public class Simulator_Menu implements Runnable{
 		ApllyButton.setForeground(Color.RED);
 		ApllyButton.setBounds(425, 250, 149, 38);
 		frame.getContentPane().add(ApllyButton);
-		
+
 		JButton Cancelbtn = new JButton("Cancel");
 		Cancelbtn.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		Cancelbtn.addActionListener(new ActionListener() {
@@ -426,7 +418,7 @@ public class Simulator_Menu implements Runnable{
 		Cancelbtn.setBackground(Color.RED);
 		Cancelbtn.setBounds(91, 250, 149, 33);
 		frame.getContentPane().add(Cancelbtn);
-		
+
 		JPanel sepLine1 = new JPanel() {	   
 			private static final long serialVersionUID = 1L;
 			@Override
@@ -437,18 +429,22 @@ public class Simulator_Menu implements Runnable{
 				g.drawLine(0, 0, 0, 110);
 				g.drawLine(0, 109, 320, 109);
 				g.drawLine(319, 0, 319, 109);
-				
+
 				g.drawLine(0, 1, 320, 1);
 				g.drawLine(1, 0, 1, 110);
 				g.drawLine(0, 108, 320, 108);
 				g.drawLine(318, 0, 318, 109);
-
-
 			}
 		};
 		sepLine1.setBounds(355, 70, 320, 110);
 		frame.getContentPane().add(sepLine1);
-	
+		
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent e) {
+		    	Cancelbtn.doClick();
+		    }
+		});
 	}
-	
 }

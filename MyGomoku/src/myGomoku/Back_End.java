@@ -1,9 +1,11 @@
 package myGomoku;
+
 /*
  * Author: Han Liao (lhan@iastate.edu or leslieileo@gmail.com)
  * This is the project for creative component in ISU
  * This class include all back end algorithm and board evaluator
  */
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -245,12 +247,6 @@ public class Back_End {
 					else {
 						maxEval = blackvalue - whitevalue;
 					}
-
-
-					//							if(bestpath.isEmpty()) {bestpath.add(new Moves(WX,WY,"W"));}
-					//							else {bestpath.remove(bestpath.size()-1);
-					//							bestpath.add(new Moves(WX,WY,"W"));}
-
 					key--;
 					board[WX][WY]='-';
 					movinglist.remove(movinglist.size()-1);
@@ -311,11 +307,6 @@ public class Back_End {
 					else {
 						minEval =blackvalue- whitevalue;
 					}
-
-					//							if(bestpath.size()==1) {bestpath.add(new Moves(BX,BY,"B"));}
-					//							else if(bestpath.size()>=1) {bestpath.remove(bestpath.size()-1);
-					//							bestpath.add(new Moves(BX,BY,"B"));}
-
 					key--;
 					board[BX][BY]='-';
 					movinglist.remove(movinglist.size()-1);
@@ -427,8 +418,6 @@ public class Back_End {
 					break;
 				}
 			}
-
-
 			depth0=false;
 			return new int[] {WX,WY};
 		}
@@ -467,11 +456,6 @@ public class Back_End {
 					maxEval=whitevalue-blackvalue;
 					WX=movinglist.get(movinglist.size()-1).getX();
 					WY=movinglist.get(movinglist.size()-1).getY();
-
-					//							if(bestpath.isEmpty()) {bestpath.add(new Moves(WX,WY,"W"));}
-					//							else {bestpath.remove(bestpath.size()-1);
-					//							bestpath.add(new Moves(WX,WY,"W"));}
-
 					key--;
 					board[WX][WY]='-';
 					movinglist.remove(movinglist.size()-1);
@@ -486,8 +470,6 @@ public class Back_End {
 					break;
 				}
 			}
-
-
 			depth0=false;
 			return new int[] {WX,WY};
 		}
@@ -517,11 +499,6 @@ public class Back_End {
 					minEval=whitevalue-blackvalue;
 					BX=movinglist.get(movinglist.size()-1).getX();
 					BY=movinglist.get(movinglist.size()-1).getY();
-
-					//							if(bestpath.size()==1) {bestpath.add(new Moves(BX,BY,"B"));}
-					//							else if(bestpath.size()>=1) {bestpath.remove(bestpath.size()-1);
-					//							bestpath.add(new Moves(BX,BY,"B"));}
-
 					key--;
 					board[BX][BY]='-';
 					movinglist.remove(movinglist.size()-1);
@@ -536,8 +513,6 @@ public class Back_End {
 					break;
 				}
 			}
-
-
 			depth0=false;
 			return new int[] {BX,BY};
 		}
@@ -574,8 +549,8 @@ public class Back_End {
 					board[candidate.get(i).getX()][candidate.get(i).getY()]='B';
 				}
 				key++;
-				Moves a = new Moves(candidate.get(i).getX(),candidate.get(i).getY());
 				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
+				
 				int m = evaluator(board, movinglist,1).CountLivefour();
 				int n = evaluator(board, movinglist,2).CountLivefour();
 				if(!whitemoves&&m>=1&&depth!=AIdepth){
@@ -626,16 +601,6 @@ public class Back_End {
 					key--;
 					board[WX][WY]='-';
 					movinglist.remove(movinglist.size()-1);
-				
-//					if(!whitemoves&&m>=1&&depth!=AIdepth){
-//						
-//						return new int[] {WX,WY};
-//					}
-//					else if(whitemoves&&n>=1&&depth!=AIdepth){
-//						
-//						return new int[] {WX,WY};
-//					}
-					//bestpath.remove(bestpath.size()-1);
 				}
 				else {
 					key--;
@@ -663,7 +628,6 @@ public class Back_End {
 					board[candidate.get(i).getX()][candidate.get(i).getY()]='W';
 				}
 				key++;
-				Moves b = new Moves(candidate.get(i).getX(),candidate.get(i).getY());
 				movinglist.add(new Moves(candidate.get(i).getX(),candidate.get(i).getY()));
 
 				int m = evaluator(board, movinglist,1).CountLivefour();
@@ -684,6 +648,7 @@ public class Back_End {
 					movinglist.remove(movinglist.size()-1);
 					return new int[] {BX,BY};
 				}
+				
 				result=Myalgo( board,  key, movinglist,depth-1,alpha,beta,true,whitemoves);
 				if(!depth0) {
 					if(whitemoves) {
@@ -715,16 +680,6 @@ public class Back_End {
 					key--;
 					board[BX][BY]='-';
 					movinglist.remove(movinglist.size()-1);
-			
-//					if(whitemoves&&m>=1&&depth!=AIdepth){
-//					
-//						return new int[] {BX,BY};
-//					}
-//					else if(!whitemoves&&n>=1&&depth!=AIdepth){
-//						
-//						return new int[] {BX,BY};
-//					}
-					//bestpath.remove(bestpath.size()-1);
 				}
 				else {
 					key--;
@@ -973,6 +928,9 @@ public class Back_End {
 		return result;
 	}
 
+	/***
+	 * Sorted candidate depend on board evaluation
+	 */
 	//	public ArrayList<Moves> SortedCandidate(ArrayList<Moves> movinglist,char[][] board) {
 	//		ArrayList<Moves> result = new ArrayList<Moves>();
 	//		for(int i=0;i<movinglist.size();i++)
@@ -1692,7 +1650,7 @@ public class Back_End {
 
 	public void evalu(int count,int cut1,int cut2,int cut3,int cut4,int dupli,int dupli2,boolean block1,boolean block2,boolean isFiveinrow,BoardState bs,ArrayList<Moves> moves) {
 		//Five in a row
-		if(count==5&&isFiveinrow==true) {bs.FiveInrow().add(moves);}
+		if(count>=5&&isFiveinrow==true) {bs.FiveInrow().add(moves);}
 		//Live two
 		if(count==2&&cut1>=1&&cut4==0&&cut3==0&&cut2>=1){bs.Livetwo().add(moves);}
 
