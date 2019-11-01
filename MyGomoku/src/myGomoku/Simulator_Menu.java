@@ -12,12 +12,21 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Scanner;
 import java.awt.event.ActionEvent;
 
 public class Simulator_Menu implements Runnable{
@@ -39,6 +48,8 @@ public class Simulator_Menu implements Runnable{
 	public char[][] board;
 	public ArrayList<Moves> movinglist=new ArrayList<Moves>();
 	public boolean gameend;
+	public String reportname;
+	public int testnum;
 
 	@Override
 	public void run() {
@@ -64,6 +75,126 @@ public class Simulator_Menu implements Runnable{
 		Image icon2=beam2.getImage();
 		JLabel background = new JLabel(new ImageIcon(icon2));
 		frame.setContentPane(background);
+		
+		
+		////////////////////////////
+frame.setBounds(100, 100, 706, 361);
+		
+		JLabel deptylable = new JLabel("Depth");
+		deptylable.setFont(new Font("Times New Roman", Font.BOLD, 17));
+		deptylable.setBounds(455, 75, 50, 20);
+		frame.getContentPane().add(deptylable);
+		
+		JTextArea depty1 = new JTextArea();
+		depty1.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
+		depty1.setBounds(460, 100, 30, 20);
+		frame.getContentPane().add(depty1);
+		depty1.setText("4");
+		depty1.setLineWrap(true);
+		depty1.setWrapStyleWord(true);
+		frame.setLocationRelativeTo ( null );
+		
+		JTextArea depty2 = new JTextArea();
+		depty2.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
+		depty2.setBounds(460, 145, 30, 20);
+		frame.getContentPane().add(depty2);
+		depty2.setText("4");
+		depty2.setLineWrap(true);
+		depty2.setWrapStyleWord(true);
+		frame.setLocationRelativeTo ( null );
+		
+		JLabel candidatelable1 = new JLabel("Candidate & Range");
+		candidatelable1.setFont(new Font("Times New Roman", Font.BOLD, 17));
+		candidatelable1.setBounds(520, 75, 150, 20);
+		frame.getContentPane().add(candidatelable1);
+
+	
+		
+		JTextArea range1 = new JTextArea();
+		range1.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
+		range1.setBounds(625, 100, 30, 20);
+		frame.getContentPane().add(range1);
+		range1.setText("1");
+		range1.setLineWrap(true);
+		range1.setWrapStyleWord(true);
+		frame.setLocationRelativeTo ( null );
+		
+		JTextArea range2 = new JTextArea();
+		range2.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
+		range2.setBounds(625, 145, 30, 20);
+		frame.getContentPane().add(range2);
+		range2.setText("1");
+		range2.setLineWrap(true);
+		range2.setWrapStyleWord(true);
+		frame.setLocationRelativeTo ( null );
+		
+		JCheckBox candidatecheck1 = new JCheckBox("");
+		candidatecheck1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(!candidatecheck1.isSelected()) {
+					range1.setEditable(false);
+					range1.setText("");
+				}
+				else {
+					range1.setEditable(true);
+					range2.setText("1");
+				}
+			}
+		});
+		candidatecheck1.setBounds(540, 100, 20, 20);
+		candidatecheck1.setSelected(true);
+		frame.getContentPane().add(candidatecheck1);
+		
+		JCheckBox candidatecheck2 = new JCheckBox("");
+		candidatecheck2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(!candidatecheck2.isSelected()) {
+					range2.setEditable(false);
+					range2.setText("");
+				}
+				else {
+					range2.setEditable(true);
+					range2.setText("1");
+				}
+			}
+		});
+		candidatecheck2.setBounds(540, 145, 20, 20);
+		candidatecheck2.setSelected(true);
+		frame.getContentPane().add(candidatecheck2);
+		
+		JLabel reportlable1 = new JLabel("Report file name:");
+		reportlable1.setFont(new Font("Times New Roman", Font.BOLD, 17));
+		reportlable1.setBounds(10, 200, 130, 20);
+		frame.getContentPane().add(reportlable1);
+		
+		JTextArea reportarea = new JTextArea();
+		reportarea.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
+		reportarea.setBounds(150, 200, 200, 20);
+		frame.getContentPane().add(reportarea);
+		reportarea.setText("Result Report");
+		JScrollPane scroll1 = new JScrollPane(reportarea);
+		scroll1.setBounds(150, 200, 200, 20);                     
+		frame.getContentPane().add(scroll1);
+		reportarea.setLineWrap(true);
+		reportarea.setWrapStyleWord(true);
+		frame.setLocationRelativeTo ( null );
+		
+		JLabel testlable = new JLabel("Test Number:");
+		testlable.setFont(new Font("Times New Roman", Font.BOLD, 17));
+		testlable.setBounds(400, 200, 130, 20);
+		frame.getContentPane().add(testlable);
+		
+		JTextArea testarea = new JTextArea();
+		testarea.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
+		testarea.setBounds(520, 200, 50, 20);
+		frame.getContentPane().add(testarea);
+		testarea.setText("100");
+		testarea.setLineWrap(true);
+		testarea.setWrapStyleWord(true);
+		frame.setLocationRelativeTo ( null );
+		
+		
+		//////////////////////////////////////////////
 
 		Intro=new JLabel("Choose the AI algorithm to be simulated:");
 		Intro.setForeground(Color.BLACK);
@@ -180,6 +311,9 @@ public class Simulator_Menu implements Runnable{
 		ApllyButton = new JButton("Apply&Start");
 		ApllyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				
+				
 				if(GreedyB.isSelected()) {
 					Black="Greedy";
 				}
@@ -198,8 +332,33 @@ public class Simulator_Menu implements Runnable{
 				else if(MyAIW.isSelected()) {
 					White="MyAI";
 				}
-				File file = new File("record.txt");
-				file.delete();
+				Scanner scr=new Scanner(reportarea.getText());
+				reportname = scr.nextLine()+".txt";
+				Scanner scr1=new Scanner(testarea.getText());
+				testnum = Integer.valueOf(scr1.nextLine());
+				File file =new File(reportname);
+				FileWriter fr = null;
+				try {
+					fr = new FileWriter(file,true);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				BufferedWriter br = new BufferedWriter(fr);
+					try {
+						br.write(reportname+"\n");
+						br.write("Start Time: "+new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime())+"\n");
+					} catch (IOException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+				try{
+					br.close();
+				}
+				catch(IOException e1){
+					e1.printStackTrace();
+				}
+				
 				frame.setVisible(false);
 				Gomoku_GUI gui = new Gomoku_GUI();	
 				gui.k=k;
@@ -211,6 +370,8 @@ public class Simulator_Menu implements Runnable{
 				gui.Animation=Animation;
 				gui.AT1animation=AT1animation;
 				gui.gameend=gameend;
+				gui.reportname = reportname;
+				gui.testnum = testnum;
 				gui.frame.setVisible(true);
 				if (gameend) {
 					gui.gameend=false;
@@ -228,7 +389,7 @@ public class Simulator_Menu implements Runnable{
 		ApllyButton.setFont(new Font("Times New Roman", Font.BOLD, 18));
 		ApllyButton.setBackground(Color.GREEN);
 		ApllyButton.setForeground(Color.RED);
-		ApllyButton.setBounds(317, 202, 149, 38);
+		ApllyButton.setBounds(425, 250, 149, 38);
 		frame.getContentPane().add(ApllyButton);
 		
 		JButton Cancelbtn = new JButton("Cancel");
@@ -246,13 +407,14 @@ public class Simulator_Menu implements Runnable{
 				gui.Animation=Animation;
 				gui.gameend=gameend;
 				gui.AT1animation=AT1animation;
+				gui.reportname = reportname;
+				gui.testnum = testnum;
 				gui.frame.setVisible(true);
-				
 			}
 		});
 		Cancelbtn.setForeground(Color.GREEN);
 		Cancelbtn.setBackground(Color.RED);
-		Cancelbtn.setBounds(91, 202, 149, 33);
+		Cancelbtn.setBounds(91, 250, 149, 33);
 		frame.getContentPane().add(Cancelbtn);
 		
 

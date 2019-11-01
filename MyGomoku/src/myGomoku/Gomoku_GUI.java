@@ -89,6 +89,16 @@ public class Gomoku_GUI {
 	public String simuB="Minimax";
 	public boolean simuApply=false;
 	Simulator_Menu SM = new Simulator_Menu();
+	public String reportname="Result Report.txt";
+	public int testnum=2;
+	public int test=0;
+	private int whitewinnum=0;
+	private int blackwinnum=0;
+	private int blackavetime=0;
+	private int whiteavetime=0;
+	private int drawnum=0;
+	private int blackcalnum=0;
+	private int whitecalnum=0;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -307,7 +317,7 @@ public class Gomoku_GUI {
 		btnstop.setBounds(784, 524, 97, 25);
 		frame.getContentPane().add(btnstop);
 
-		 btnNewGame = new JButton("New Game");
+		btnNewGame = new JButton("New Game");
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -370,25 +380,15 @@ public class Gomoku_GUI {
 					SM.White=simuW;
 					SM.Animation=Animation;
 					SM.AT1animation=AT1animation;
+					SM.reportname = reportname;
+					SM.testnum = testnum;
 					SM.run();
 					frame.dispose();
 				}
 
+
+				BufferedWriter br = null;
 				if(simuApply) {
-
-
-					File file =new File("record.txt");
-					FileWriter fr = null;
-					try {
-						fr = new FileWriter(file,true);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					BufferedWriter br = new BufferedWriter(fr);
-
-
-
 					Analysis1.append("Processing.");
 					String a;
 					for( int i=1;i<=k;i++) {
@@ -408,12 +408,11 @@ public class Gomoku_GUI {
 					if(gameend) {
 						btnstop.doClick();
 						TM.stop();
-						simuApply=false;
+						//simuApply=false;
 						AT1animation=false;
 						BoardPanel.repaint();
 						Analysis1.setForeground(Color.RED);
 						Analysis1.setText("Game is over.\nClick 'New game' button to clear board");
-
 					}
 					else if(Animation){
 						AT1animation=true;
@@ -480,6 +479,7 @@ public class Gomoku_GUI {
 											AI=backend.MyAI(board,k,movinglist,Mydepth,true);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
 											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
+											blackcalnum+=backend.myaiiteration;
 										}
 										else if(simuB=="Greedy") {
 											AI=backend.Greedy(board,k,movinglist);
@@ -490,18 +490,11 @@ public class Gomoku_GUI {
 											AI=backend.Minimax(board,k,movinglist,depth,true);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
 											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
+											blackcalnum+=backend.minimaxiteration;
 										}
 										endtime1 = System.nanoTime();
 										avertime1+=(endtime1-starttime1);
 										avertime1/=(iteration*1000000);
-										
-										try {
-
-											br.write(String.valueOf(avertime1)+"\n");
-										} catch (IOException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
 									}
 									else {
 										starttime2 = System.nanoTime();
@@ -509,6 +502,7 @@ public class Gomoku_GUI {
 											AI=backend.MyAI(board,k,movinglist,Mydepth,true);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
 											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
+											whitecalnum+=backend.myaiiteration;
 										}
 										else if(simuW=="Greedy") {
 											AI=backend.Greedy(board,k,movinglist);
@@ -519,17 +513,11 @@ public class Gomoku_GUI {
 											AI=backend.Minimax(board,k,movinglist,depth,true);
 											Analysis1.append("\n\nNumber of new algo calculation:\n"+backend.myaiiteration);
 											Analysis1.append("\nNumber of minimax algo calculation: "+backend.minimaxiteration+"\n");
+											whitecalnum+=backend.minimaxiteration;
 										}
 										endtime2 = System.nanoTime();
 										avertime2+=(endtime2-starttime2);
 										avertime2/=(iteration*1000000);
-										try {
-
-											br.write(String.valueOf(avertime2)+"\n");
-										} catch (IOException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
 									}
 								}
 
@@ -565,18 +553,61 @@ public class Gomoku_GUI {
 							else {flag=true;}
 						}
 						simuApply=true;
-
-
-						
-					}
-					try {
-						br.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					}	
 				}
 				Analysis1.setCaretPosition(0);
+				Analysis.append("\nTested game num:"+test);
+				if(gameend){
+					test++;
+					if(movinglist.size()==225){drawnum++;}
+					if(movinglist.get(movinglist.size()-1).getStone().equals("WHITE")) {whitewinnum++;}
+					if(movinglist.get(movinglist.size()-1).getStone().equals("BLACK")) {blackwinnum++;}
+					blackavetime+=avertime1;
+					whiteavetime+=avertime2;
+					btnstop.doClick();
+					btnNewGame.doClick();
+
+					if(test<testnum){
+						simuApply=true;
+						btnsimulate.doClick();
+					}
+					else{
+						try {
+							blackavetime/=testnum;whiteavetime/=testnum;
+							blackcalnum/=testnum;whitecalnum/=testnum;
+							File file =new File(reportname);
+							FileWriter fr = null;
+							try {
+								fr = new FileWriter(file,true);
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							br = new BufferedWriter(fr);
+							br.write("End Time: "+new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime())+"\n");
+							br.write("------------------------------\n\n");
+							br.write(String.valueOf(testnum)+" games tested in total\n\n");
+							br.write("Black("+simuB+"): "+String.valueOf(blackwinnum)+"      Average Time Consuming: "+String.valueOf(blackavetime)+" ns      Average Calculation: "+String.valueOf(blackcalnum)+"\n");
+							br.write("White("+simuW+"): "+String.valueOf(whitewinnum)+"      Average Time Consuming: "+String.valueOf(whiteavetime)+" ns      Average Calculation: "+String.valueOf(whitecalnum)+"\n");
+							br.write("Draw:"+String.valueOf(drawnum)+"\n");
+							test=0;
+							simuApply=false;
+							blackavetime=0;
+							whiteavetime=0;
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						try{
+							br.close();
+						}
+						catch(IOException e){
+							e.printStackTrace();
+						}
+					}
+				}
+
+
 			}
 		};
 		btnsimulate.addActionListener(FkU);
