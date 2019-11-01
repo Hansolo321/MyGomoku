@@ -589,7 +589,9 @@ public class Gomoku_GUI {
 							br.write(String.valueOf(testnum)+" games tested in total\n\n");
 							br.write("Black("+simuB+"): "+String.valueOf(blackwinnum)+"      Average Time Consuming: "+String.valueOf(blackavetime)+" ns      Average Calculation: "+String.valueOf(blackcalnum)+"\n");
 							br.write("White("+simuW+"): "+String.valueOf(whitewinnum)+"      Average Time Consuming: "+String.valueOf(whiteavetime)+" ns      Average Calculation: "+String.valueOf(whitecalnum)+"\n");
-							br.write("Draw:"+String.valueOf(drawnum)+"\n");
+							br.write("Draw:"+String.valueOf(drawnum)+"\n\n");
+							br.write("----------------------------------------------------------------------------------------\n");
+							br.write("----------------------------------------------------------------------------------------\n\n");
 							test=0;
 							simuApply=false;
 							blackavetime=0;
