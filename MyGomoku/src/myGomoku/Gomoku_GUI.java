@@ -559,13 +559,14 @@ public class Gomoku_GUI {
 				if(gameend){
 					test++;
 					if(movinglist.size()==225){drawnum++;}
-					if(movinglist.get(movinglist.size()-1).getStone().equals("WHITE")) {whitewinnum++;}
-					if(movinglist.get(movinglist.size()-1).getStone().equals("BLACK")) {blackwinnum++;}
+					else if(movinglist.get(movinglist.size()-1).getStone().equals("WHITE")) {whitewinnum++;}
+					else if(movinglist.get(movinglist.size()-1).getStone().equals("BLACK")) {blackwinnum++;}
 					blackavetime+=avertime1;
 					whiteavetime+=avertime2;
 					btnstop.doClick();
+					if(!(testnum==1)) {
 					btnNewGame.doClick();
-
+					}
 					if(test<testnum){
 						simuApply=true;
 						btnsimulate.doClick();
