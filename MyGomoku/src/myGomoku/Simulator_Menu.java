@@ -87,7 +87,7 @@ public class Simulator_Menu implements Runnable{
 		depty1.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
 		depty1.setBounds(460, 100, 30, 20);
 		frame.getContentPane().add(depty1);
-		depty1.setText("4");
+		depty1.setText("8");
 		depty1.setLineWrap(true);
 		depty1.setWrapStyleWord(true);
 		frame.setLocationRelativeTo ( null );
@@ -96,7 +96,7 @@ public class Simulator_Menu implements Runnable{
 		depty2.setFont(new Font("Mongolian Baiti", Font.BOLD, 17));
 		depty2.setBounds(460, 145, 30, 20);
 		frame.getContentPane().add(depty2);
-		depty2.setText("4");
+		depty2.setText("8");
 		depty2.setLineWrap(true);
 		depty2.setWrapStyleWord(true);
 		frame.setLocationRelativeTo ( null );

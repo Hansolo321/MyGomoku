@@ -1021,6 +1021,7 @@ public class Gomoku_GUI {
 		JButton btnnext = new JButton("Next Move");
 		btnnext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Analysis.setText("");
 				AIboolean=true;
 				if(k<5&&OpeningFlag==true) {
 					OpeningBook ob= new OpeningBook();	
@@ -1090,6 +1091,7 @@ public class Gomoku_GUI {
 						}
 						five.clear();
 						endCheck();
+						
 						if(AIversion.equals("Minimax")) {
 							Analysis.append("\n\nNumber of minimax algo calculation: "+backend.minimaxiteration);}
 						else if(AIversion.equals("MyAI")){
