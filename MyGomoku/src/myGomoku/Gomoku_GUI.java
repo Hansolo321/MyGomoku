@@ -130,6 +130,7 @@ public class Gomoku_GUI {
 		frame.setResizable(false);
 		ImageIcon beam=null;
 		beam = new ImageIcon(this.getClass().getClassLoader().getResource("GomokuIcon.png"));
+		//beam = new ImageIcon("GomokuIcon.png");
 		Image icon=beam.getImage();
 		frame.setIconImage(icon);
 		frame.setBounds(100, 100, 1305, 660);
@@ -139,6 +140,7 @@ public class Gomoku_GUI {
 		frame.getContentPane().setBackground(new Color(255,250,240));
 		ImageIcon beam2=null;
 		beam2 = new ImageIcon(this.getClass().getClassLoader().getResource("Ocean.jpg"));
+		//beam2 = new ImageIcon("Ocean.png");
 		Image icon2=beam2.getImage();
 		JLabel background = new JLabel(new ImageIcon(icon2));
 		frame.setContentPane(background);
@@ -173,6 +175,7 @@ public class Gomoku_GUI {
 				super.paintComponent(g);
 				ImageIcon beam3=null;
 				beam3 = new ImageIcon(this.getClass().getClassLoader().getResource("WOODBKG.png"));
+				//beam3 = new ImageIcon("WOODBKG.png");
 				Image icon3=beam3.getImage();	
 				frame.getContentPane().setLayout(null);
 				g.drawImage(icon3, 0, 0, null);

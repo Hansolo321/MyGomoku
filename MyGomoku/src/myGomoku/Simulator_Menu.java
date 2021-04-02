@@ -61,13 +61,15 @@ public class Simulator_Menu implements Runnable{
 		frame.setBounds(100, 100, 706, 360);
 		frame.getContentPane().setLayout(null);
 		ImageIcon beam=null;
-		beam = new ImageIcon(this.getClass().getClassLoader().getResource("GomokuIcon.png"));
+		//beam = new ImageIcon(this.getClass().getClassLoader().getResource("GomokuIcon.png"));
+		beam = new ImageIcon("GomokuIcon.png");
 		Image icon=beam.getImage();
 		frame.setIconImage(icon);
 		frame.setLocationRelativeTo(null);
 		frame.setTitle("Simulator Menu");
 		ImageIcon beam2=null;
-		beam2 = new ImageIcon(this.getClass().getClassLoader().getResource("menu-background.jpg"));
+		//beam2 = new ImageIcon(this.getClass().getClassLoader().getResource("menu-background.jpg"));
+		beam2=new ImageIcon("menu-background.jpg");
 		//beam2 = new ImageIcon(this.getClass().getClassLoader().getResource("Ocean.jpg"));
 		Image icon2=beam2.getImage();
 		JLabel background = new JLabel(new ImageIcon(icon2));
