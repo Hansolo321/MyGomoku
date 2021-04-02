@@ -1,0 +1,14 @@
+Result Report.txt
+Start Time: 2020/11/20 16:24:51
+End Time: 2020/11/20 16:38:50
+------------------------------
+
+10 games tested in total
+
+Black(Greedy): 7      Average Time Consuming: 910 ns      Average Calculation: 0
+White(Greedy): 2      Average Time Consuming: 828 ns      Average Calculation: 0
+Draw:1
+
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+
